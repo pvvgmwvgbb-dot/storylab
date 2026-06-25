@@ -1,0 +1,22 @@
+lesson:
+  id: example-lesson-id
+  title: Example Lesson Title
+  version: 0.1
+  language: en
+  audience:
+    age_range: 8-11
+    mode: teacher-led, image-first
+  learning_goal: Describe the learning goal here.
+
+concept:
+  name: Concept name
+  target_abstraction: The abstract idea to reach
+  concrete_model: The visible model or analogy
+  key_transformation: How the learner moves from visible model to abstraction
+
+scenes:
+  - id: opening
+    visual_anchor: What the learner should see
+    purpose: Why this scene exists
+    teacher_prompt: What the teacher may say aloud
+    discovery: What the learner should notice
