@@ -1,0 +1,80 @@
+lesson:
+  id: dinosaur-escape-arithmetic-series
+  title: Dinosaur Escape: Arithmetic Series
+  version: 0.1
+  language: en
+  audience:
+    age_range: 8-11
+    mode: teacher-led, image-first
+  learning_goal: Understand arithmetic series through a staircase escape story.
+
+concept:
+  name: Arithmetic series
+  target_abstraction: Sum = (first + last) * count / 2
+  concrete_model: staircase made from square blocks
+  key_transformation: duplicate and rotate the staircase to form a rectangle
+
+story_arc:
+  - earth_birth
+  - life_and_dinosaurs
+  - time_transport
+  - dinosaur_chase
+  - cliff_gap
+  - staircase_case_one
+  - staircase_case_two
+  - escape
+  - reflection
+
+scenes:
+  - id: earth_birth
+    visual_anchor: space cloud, young sun, hot earth
+    purpose: open the timeline and create wonder
+    teacher_prompt: A long time before people, before animals, even before trees, Earth was being born.
+
+  - id: dinosaur_world
+    visual_anchor: volcano, giant plants, dinosaurs
+    purpose: move from Earth history to story adventure
+    teacher_prompt: Much later, Earth became a world where dinosaurs lived.
+
+  - id: time_transport
+    visual_anchor: museum, fossil, blue time portal
+    purpose: move the learner into the story
+    teacher_prompt: The fossil glows. The room spins. Suddenly, we are not in the museum anymore.
+
+  - id: chase
+    visual_anchor: child running, dinosaur behind, shaking ground
+    purpose: create urgency
+    teacher_prompt: The dinosaur is fast. We need a way to escape.
+
+  - id: cliff_gap
+    visual_anchor: high ledge, square blocks, no ready-made stairs
+    purpose: create the need for math
+    teacher_prompt: The ledge is ten blocks high. How many blocks do we need to build the stairs?
+
+  - id: one_step_staircase
+    visual_anchor: staircase with rows 1 to 10
+    purpose: reveal 1 + 2 + ... + 10
+    teacher_prompt: If each step rises by one block, the rows are 1, 2, 3, and so on.
+    discovery: The total is not just 10. It is the whole staircase.
+
+  - id: rectangle_trick
+    visual_anchor: duplicated staircase rotated into a rectangle
+    purpose: show why the formula works
+    teacher_prompt: What happens if we copy the staircase and turn it around?
+    discovery: Two staircases make a 10 by 11 rectangle.
+
+  - id: two_step_staircase
+    visual_anchor: rows 2, 4, 6, 8, 10
+    purpose: compare a second arithmetic series
+    teacher_prompt: What if the shoes can jump two blocks each time?
+    discovery: This staircase is 2 + 4 + 6 + 8 + 10.
+
+  - id: escape
+    visual_anchor: child reaches high ledge, dinosaur below
+    purpose: reward discovery
+    teacher_prompt: Math gave us a way out.
+
+  - id: reflection
+    visual_anchor: museum again, fossil, notebook
+    purpose: return from story to abstraction
+    teacher_prompt: Today the formula was not magic. We saw where it came from.
