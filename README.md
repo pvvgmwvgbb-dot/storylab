@@ -37,6 +37,7 @@ Open any lesson `index.html` in a browser, or serve the repository with a simple
 lessons/multiplication-candy/index.html
 lessons/division-monster/index.html
 lessons/arithmetic-series-staircase/index.html
+lessons/triangle-area-rectangle-cut/index.html
 ```
 
 Browser deck controls:
