@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>三角形面积：从矩形切开</title>
+  <title>三角形面积：补成矩形</title>
   <link rel="stylesheet" href="../../assets/story-deck.css" />
   <style>
     .shape-board {
-      width: min(980px, 92vw);
-      height: min(560px, 62vh);
+      width: min(1040px, 92vw);
+      height: min(580px, 62vh);
       background: #fff;
       border: 4px solid #222;
       border-radius: 28px;
@@ -20,43 +20,46 @@
       overflow: hidden;
     }
 
-    .shape-board svg {
-      width: 92%;
-      height: 92%;
-      display: block;
-    }
+    .shape-board.large { height: min(640px, 68vh); }
+    .shape-board svg { width: 94%; height: 94%; display: block; }
 
-    .rect-fill { fill: #ffcb69; stroke: #222; stroke-width: 4; }
-    .tri-a { fill: #ffcb69; stroke: #222; stroke-width: 4; }
-    .tri-b { fill: #8ecae6; stroke: #222; stroke-width: 4; }
-    .guide { stroke: #222; stroke-width: 6; stroke-dasharray: 16 12; }
+    .rect-line { fill: none; stroke: #222; stroke-width: 5; }
+    .tri-main { fill: #ffcb69; stroke: #222; stroke-width: 5; }
+    .tri-fill { fill: #8ecae6; stroke: #222; stroke-width: 5; }
+    .tri-soft { fill: #8ecae6; stroke: #222; stroke-width: 5; opacity: .36; }
+    .guide { stroke: #222; stroke-width: 5; stroke-dasharray: 14 10; fill: none; }
     .height-line { stroke: #fb8500; stroke-width: 6; stroke-dasharray: 10 10; }
-    .label { font: 700 28px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #222; }
-    .small-label { font: 700 22px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #555; }
+    .base-line { stroke: #222; stroke-width: 6; }
+    .label { font: 800 30px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #222; }
+    .small-label { font: 700 23px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #555; }
+    .formula-label { font: 900 38px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #222; }
 
-    .cut-line { stroke-dasharray: 620; stroke-dashoffset: 620; }
-    .active .cut-line { animation: drawCut 1.8s ease forwards; }
-
-    .separate-left, .separate-right { transform-box: fill-box; transform-origin: center; }
-    .active .separate-left { animation: moveLeft 2.4s ease forwards .4s; }
-    .active .separate-right { animation: moveRight 2.4s ease forwards .4s; }
-
-    @keyframes drawCut { to { stroke-dashoffset: 0; } }
-    @keyframes moveLeft { 45%, 100% { transform: translate(-48px, 24px); } }
-    @keyframes moveRight { 45%, 100% { transform: translate(48px, -24px); } }
-
-    .formula-stack {
-      display: grid;
-      gap: 22px;
-      width: min(980px, 92vw);
+    .complete-triangle { opacity: 0; transform-box: fill-box; transform-origin: center; }
+    .active .complete-triangle { animation: completeIn 2.4s ease forwards .35s; }
+    @keyframes completeIn {
+      0% { opacity: 0; transform: translate(-70px, -35px); }
+      60%, 100% { opacity: .95; transform: translate(0, 0); }
     }
 
+    .draw-line { stroke-dasharray: 360; stroke-dashoffset: 360; }
+    .active .draw-line { animation: drawLine 1.5s ease forwards; }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+    .formula-grid {
+      width: min(1080px, 94vw);
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .formula-stack { display: grid; gap: 20px; }
     .mini-equation {
       background: #fff;
       border: 4px solid #222;
       border-radius: 22px;
-      padding: 18px 28px;
-      font-size: clamp(30px, 5vw, 64px);
+      padding: 18px 26px;
+      font-size: clamp(28px, 4vw, 58px);
       font-weight: 900;
       text-align: center;
       box-shadow: 0 8px 0 rgba(0,0,0,.14);
@@ -70,8 +73,9 @@
       align-items: center;
     }
 
-    @media (max-width: 760px) {
-      .two-column { grid-template-columns: 1fr; }
+    @media (max-width: 820px) {
+      .formula-grid, .two-column { grid-template-columns: 1fr; }
+      .shape-board { height: 52vh; }
     }
   </style>
 </head>
@@ -79,69 +83,112 @@
 <div class="deck">
   <section class="slide active">
     <h1>三角形面积</h1>
-    <p class="center">不要先画三角形。我们先画一个更容易算的图形：矩形。</p>
-    <div class="stage"><div class="emoji">▭ ➜ ◺</div></div>
-  </section>
-
-  <section class="slide">
-    <h2>先看一个矩形</h2>
-    <p class="center">长是 8，高是 5。它的面积是多少？</p>
+    <p class="center">先不要背公式。先看一个图形怎么被补成矩形。</p>
     <div class="stage">
-      <div class="shape-board">
-        <svg viewBox="0 0 720 420" role="img" aria-label="rectangle with base 8 and height 5">
-          <rect class="rect-fill" x="140" y="90" width="440" height="250" rx="8" />
-          <text class="label" x="360" y="382" text-anchor="middle">底 8</text>
-          <text class="label" x="100" y="220" text-anchor="middle" transform="rotate(-90 100 220)">高 5</text>
+      <div class="shape-board large">
+        <svg viewBox="0 0 760 440" role="img" aria-label="right triangle completed into a rectangle">
+          <rect class="rect-line" x="150" y="95" width="460" height="250" rx="8" />
+          <polygon class="tri-main" points="150,345 610,345 610,95" />
+          <polygon class="tri-soft" points="150,345 150,95 610,95" />
+          <text class="formula-label" x="380" y="395" text-anchor="middle">三角形 + 自己的另一半 = 矩形</text>
         </svg>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>矩形很好算</h2>
-    <div class="stage">
-      <div class="formula-stack">
-        <div class="mini-equation">矩形面积 = 底 × 高</div>
-        <div class="mini-equation">8 × 5 = 40</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <h2>现在，用对角线切开</h2>
-    <p class="center">一条线，把矩形切成两个三角形。</p>
+    <h2>先看这个直角三角形</h2>
+    <p class="center">底是 8，高是 5。面积是多少？</p>
     <div class="stage">
       <div class="shape-board">
-        <svg viewBox="0 0 720 420" role="img" aria-label="rectangle cut by diagonal into two right triangles">
-          <rect class="rect-fill" x="140" y="90" width="440" height="250" rx="8" />
-          <line class="guide cut-line" x1="140" y1="340" x2="580" y2="90" />
-          <text class="small-label" x="360" y="382" text-anchor="middle">对角线切开</text>
+        <svg viewBox="0 0 760 440" role="img" aria-label="right triangle with base 8 and height 5">
+          <polygon class="tri-main" points="170,345 610,345 610,105" />
+          <line class="base-line" x1="170" y1="365" x2="610" y2="365" />
+          <line class="height-line" x1="630" y1="105" x2="630" y2="345" />
+          <text class="label" x="390" y="405" text-anchor="middle">底 8</text>
+          <text class="label" x="665" y="235">高 5</text>
+          <text class="small-label" x="450" y="285">这个图形不好直接数</text>
         </svg>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>切开后发生了什么？</h2>
-    <p class="center">一个矩形，变成两个一样大的直角三角形。</p>
+    <h2>给它补上自己的另一半</h2>
+    <p class="center">不是先画矩形，而是把三角形补成一个我们会算的矩形。</p>
     <div class="stage">
       <div class="shape-board">
-        <svg viewBox="0 0 720 420" role="img" aria-label="two equal right triangles separated">
-          <polygon class="tri-a separate-left" points="140,340 140,90 580,90" />
-          <polygon class="tri-b separate-right" points="140,340 580,90 580,340" />
-          <text class="label" x="230" y="145">一半</text>
-          <text class="label" x="500" y="310">一半</text>
+        <svg viewBox="0 0 760 440" role="img" aria-label="right triangle completed by another equal triangle">
+          <rect class="rect-line" x="170" y="105" width="440" height="240" rx="8" />
+          <polygon class="tri-main" points="170,345 610,345 610,105" />
+          <polygon class="tri-fill complete-triangle" points="170,345 170,105 610,105" />
+          <text class="label" x="390" y="392" text-anchor="middle">补齐后，外面刚好是矩形</text>
         </svg>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>所以，一个直角三角形是多少？</h2>
+    <h2>现在图形告诉我们</h2>
     <div class="stage">
-      <div class="formula-stack">
-        <div class="mini-equation">矩形面积 = 40</div>
-        <div class="mini-equation">一个三角形 = 40 ÷ 2 = 20</div>
+      <div class="formula-grid">
+        <div class="shape-board">
+          <svg viewBox="0 0 760 440" role="img" aria-label="two equal right triangles make one rectangle">
+            <rect class="rect-line" x="170" y="105" width="440" height="240" rx="8" />
+            <polygon class="tri-main" points="170,345 610,345 610,105" />
+            <polygon class="tri-fill" points="170,345 170,105 610,105" />
+            <text class="label" x="420" y="275">原来的三角形</text>
+            <text class="label" x="235" y="170">补上的一半</text>
+          </svg>
+        </div>
+        <div class="formula-stack">
+          <div class="mini-equation">两个一样的三角形</div>
+          <div class="mini-equation">刚好组成一个矩形</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>矩形面积是多少？</h2>
+    <div class="stage">
+      <div class="formula-grid">
+        <div class="shape-board">
+          <svg viewBox="0 0 760 440" role="img" aria-label="rectangle with base 8 and height 5">
+            <rect class="rect-line" x="170" y="105" width="440" height="240" rx="8" />
+            <polygon class="tri-main" points="170,345 610,345 610,105" />
+            <polygon class="tri-fill" points="170,345 170,105 610,105" />
+            <line class="base-line" x1="170" y1="365" x2="610" y2="365" />
+            <line class="height-line" x1="630" y1="105" x2="630" y2="345" />
+            <text class="label" x="390" y="405" text-anchor="middle">底 8</text>
+            <text class="label" x="665" y="235">高 5</text>
+          </svg>
+        </div>
+        <div class="formula-stack">
+          <div class="mini-equation">矩形面积 = 底 × 高</div>
+          <div class="mini-equation">8 × 5 = 40</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>一个三角形只占一半</h2>
+    <div class="stage">
+      <div class="formula-grid">
+        <div class="shape-board">
+          <svg viewBox="0 0 760 440" role="img" aria-label="one right triangle is half of the rectangle">
+            <rect class="rect-line" x="170" y="105" width="440" height="240" rx="8" />
+            <polygon class="tri-main" points="170,345 610,345 610,105" />
+            <polygon class="tri-soft" points="170,345 170,105 610,105" />
+            <text class="formula-label" x="455" y="290">这一半</text>
+          </svg>
+        </div>
+        <div class="formula-stack">
+          <div class="mini-equation">矩形面积 = 40</div>
+          <div class="mini-equation">三角形面积 = 40 ÷ 2</div>
+          <div class="mini-equation">= 20</div>
+        </div>
       </div>
     </div>
   </section>
@@ -149,22 +196,35 @@
   <section class="slide">
     <h2>直角三角形面积</h2>
     <div class="stage">
-      <div class="note">
-        <p class="big">直角三角形面积 = 底 × 高 ÷ 2</p>
-        <p>因为它刚好是一个矩形的一半。</p>
+      <div class="formula-grid">
+        <div class="shape-board">
+          <svg viewBox="0 0 760 440" role="img" aria-label="right triangle area formula with reference rectangle">
+            <rect class="rect-line" x="170" y="105" width="440" height="240" rx="8" />
+            <polygon class="tri-main" points="170,345 610,345 610,105" />
+            <polygon class="tri-soft" points="170,345 170,105 610,105" />
+            <line class="base-line" x1="170" y1="365" x2="610" y2="365" />
+            <line class="height-line" x1="630" y1="105" x2="630" y2="345" />
+            <text class="label" x="390" y="405" text-anchor="middle">底</text>
+            <text class="label" x="665" y="235">高</text>
+          </svg>
+        </div>
+        <div class="note">
+          <p class="big">面积 = 底 × 高 ÷ 2</p>
+          <p>因为它是这个矩形的一半。</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>那普通三角形呢？</h2>
-    <p class="center">普通三角形看起来不是矩形的一半。怎么办？</p>
+    <h2>普通三角形怎么办？</h2>
+    <p class="center">还是不要直接背公式。先找到它的高。</p>
     <div class="stage">
       <div class="shape-board">
-        <svg viewBox="0 0 720 420" role="img" aria-label="ordinary triangle with height line">
-          <polygon class="tri-a" points="130,330 590,330 390,100" />
-          <line class="height-line" x1="390" y1="100" x2="390" y2="330" />
-          <text class="label" x="360" y="374" text-anchor="middle">底</text>
+        <svg viewBox="0 0 760 440" role="img" aria-label="ordinary triangle with height">
+          <polygon class="tri-main" points="130,345 620,345 390,95" />
+          <line class="height-line draw-line" x1="390" y1="95" x2="390" y2="345" />
+          <text class="label" x="375" y="390" text-anchor="middle">整个底</text>
           <text class="label" x="420" y="230">高</text>
         </svg>
       </div>
@@ -172,38 +232,66 @@
   </section>
 
   <section class="slide">
-    <h2>把它分成两个直角三角形</h2>
-    <p class="center">从顶点往底边画一条高，就切成了左右两个直角三角形。</p>
+    <h2>高把它分成两个直角三角形</h2>
+    <p class="center">左边补左边的矩形，右边补右边的矩形。</p>
     <div class="stage">
-      <div class="shape-board">
-        <svg viewBox="0 0 720 420" role="img" aria-label="ordinary triangle split into two right triangles by height">
-          <polygon class="tri-a" points="130,330 390,330 390,100" />
-          <polygon class="tri-b" points="390,100 390,330 590,330" />
-          <line class="height-line" x1="390" y1="100" x2="390" y2="330" />
-          <text class="label" x="245" y="305" text-anchor="middle">左半</text>
-          <text class="label" x="495" y="305" text-anchor="middle">右半</text>
+      <div class="shape-board large">
+        <svg viewBox="0 0 760 440" role="img" aria-label="ordinary triangle split into two right triangles and each completed into a rectangle">
+          <rect class="rect-line" x="130" y="95" width="260" height="250" rx="8" />
+          <rect class="rect-line" x="390" y="95" width="230" height="250" rx="8" />
+          <polygon class="tri-soft" points="130,345 130,95 390,95" />
+          <polygon class="tri-main" points="130,345 390,345 390,95" />
+          <polygon class="tri-main" points="390,95 390,345 620,345" />
+          <polygon class="tri-soft" points="390,95 620,95 620,345" />
+          <line class="height-line" x1="390" y1="95" x2="390" y2="345" />
+          <text class="small-label" x="260" y="385" text-anchor="middle">左底</text>
+          <text class="small-label" x="505" y="385" text-anchor="middle">右底</text>
+          <text class="small-label" x="415" y="230">同一条高</text>
         </svg>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>两个直角三角形加起来</h2>
+    <h2>左边一半，右边也一半</h2>
     <div class="stage">
-      <div class="two-column">
-        <div class="note"><p class="med">左边面积</p><p>左底 × 高 ÷ 2</p></div>
-        <div class="note"><p class="med">右边面积</p><p>右底 × 高 ÷ 2</p></div>
+      <div class="formula-grid">
+        <div class="shape-board">
+          <svg viewBox="0 0 760 440" role="img" aria-label="ordinary triangle area as sum of two right triangle halves">
+            <rect class="rect-line" x="130" y="95" width="260" height="250" rx="8" />
+            <rect class="rect-line" x="390" y="95" width="230" height="250" rx="8" />
+            <polygon class="tri-soft" points="130,345 130,95 390,95" />
+            <polygon class="tri-main" points="130,345 390,345 390,95" />
+            <polygon class="tri-main" points="390,95 390,345 620,345" />
+            <polygon class="tri-soft" points="390,95 620,95 620,345" />
+            <line class="height-line" x1="390" y1="95" x2="390" y2="345" />
+          </svg>
+        </div>
+        <div class="formula-stack">
+          <div class="mini-equation">左边 = 左底 × 高 ÷ 2</div>
+          <div class="mini-equation">右边 = 右底 × 高 ÷ 2</div>
+        </div>
       </div>
     </div>
-    <p class="center">它们的高是同一条高。</p>
   </section>
 
   <section class="slide">
     <h2>合起来就是整个三角形</h2>
     <div class="stage">
-      <div class="formula-stack">
-        <div class="mini-equation">左底 + 右底 = 整个底</div>
-        <div class="mini-equation">面积 = 底 × 高 ÷ 2</div>
+      <div class="formula-grid">
+        <div class="shape-board">
+          <svg viewBox="0 0 760 440" role="img" aria-label="ordinary triangle with base and height kept visible next to formula">
+            <polygon class="tri-main" points="130,345 620,345 390,95" />
+            <line class="height-line" x1="390" y1="95" x2="390" y2="345" />
+            <line class="base-line" x1="130" y1="365" x2="620" y2="365" />
+            <text class="label" x="375" y="405" text-anchor="middle">底 = 左底 + 右底</text>
+            <text class="label" x="420" y="230">高</text>
+          </svg>
+        </div>
+        <div class="formula-stack">
+          <div class="mini-equation">左底 + 右底 = 整个底</div>
+          <div class="mini-equation">面积 = 底 × 高 ÷ 2</div>
+        </div>
       </div>
     </div>
   </section>
@@ -211,9 +299,19 @@
   <section class="slide">
     <h2>最后记住这个画面</h2>
     <div class="stage">
-      <div class="note">
-        <p class="big">三角形面积 = 底 × 高 ÷ 2</p>
-        <p>不是因为公式规定，而是因为它可以看成“半个矩形”。</p>
+      <div class="formula-grid">
+        <div class="shape-board">
+          <svg viewBox="0 0 760 440" role="img" aria-label="triangle completed into rectangle as final memory image">
+            <rect class="rect-line" x="170" y="105" width="440" height="240" rx="8" />
+            <polygon class="tri-main" points="170,345 610,345 610,105" />
+            <polygon class="tri-soft" points="170,345 170,105 610,105" />
+            <text class="small-label" x="390" y="392" text-anchor="middle">一个三角形是一个矩形的一半</text>
+          </svg>
+        </div>
+        <div class="note">
+          <p class="big">三角形面积 = 底 × 高 ÷ 2</p>
+          <p>不是因为公式规定，而是因为它能补成矩形。</p>
+        </div>
       </div>
     </div>
   </section>
