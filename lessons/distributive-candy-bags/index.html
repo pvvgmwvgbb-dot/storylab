@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>乘法分配律：糖果包</title>
+  <link rel="stylesheet" href="../../assets/story-deck.css" />
+  <style>
+    .bag-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      width: min(1040px, 92vw);
+    }
+
+    .bag {
+      width: 112px;
+      min-height: 142px;
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 24px;
+      box-shadow: 0 7px 0 rgba(0,0,0,.14);
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 8px;
+      padding: 12px;
+      font-weight: 900;
+      font-size: 22px;
+    }
+
+    .dad { background: #ffcb69; }
+    .mom { background: #8ecae6; }
+    .candy-six { font-size: 27px; line-height: 1.15; }
+
+    .person-card {
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 26px;
+      padding: 24px 32px;
+      box-shadow: 0 8px 0 rgba(0,0,0,.16);
+      text-align: center;
+      min-width: min(420px, 90vw);
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      width: min(1100px, 94vw);
+      align-items: start;
+    }
+
+    .formula-stack { display: grid; gap: 20px; width: min(1000px, 92vw); }
+    .mini-equation {
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 22px;
+      padding: 18px 26px;
+      font-size: clamp(28px, 4vw, 58px);
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 8px 0 rgba(0,0,0,.14);
+    }
+
+    .same-pack {
+      outline: 7px solid #fb8500;
+      outline-offset: 6px;
+    }
+
+    .arrow-big {
+      font-size: clamp(52px, 7vw, 96px);
+      font-weight: 900;
+    }
+
+    .mistake {
+      background: #fff;
+      border: 4px dashed #d00000;
+      border-radius: 22px;
+      padding: 20px 28px;
+      font-size: clamp(30px, 4vw, 54px);
+      font-weight: 900;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .split-grid { grid-template-columns: 1fr; }
+      .bag { width: 90px; min-height: 124px; }
+    }
+  </style>
+</head>
+<body>
+<div class="deck">
+  <section class="slide active">
+    <h1>糖果包里的乘法秘密</h1>
+    <p class="center">今天不是学一个新公式，而是发现：什么时候可以先合起来再乘。</p>
+    <div class="stage"><div class="emoji">👨 🛍️ + 👩 🛍️ = ?</div></div>
+  </section>
+
+  <section class="slide">
+    <h2>爸爸回家了</h2>
+    <p class="center">爸爸说：我给你带了 3 包糖。</p>
+    <div class="stage">
+      <div class="bag-row">
+        <div class="bag dad"><div>爸爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+        <div class="bag dad"><div>爸爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+        <div class="bag dad"><div>爸爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>妈妈也回家了</h2>
+    <p class="center">妈妈不知道爸爸已经买了。她也买了 5 包。</p>
+    <div class="stage">
+      <div class="bag-row">
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>小朋友开始数</h2>
+    <p class="center">他先分开数：爸爸的，妈妈的。</p>
+    <div class="stage">
+      <div class="split-grid">
+        <div class="person-card">
+          <p class="med">爸爸的糖</p>
+          <p class="big">3 × 6</p>
+        </div>
+        <div class="person-card">
+          <p class="med">妈妈的糖</p>
+          <p class="big">5 × 6</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>这样当然可以</h2>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">爸爸：3 × 6 = 18</div>
+        <div class="mini-equation">妈妈：5 × 6 = 30</div>
+        <div class="mini-equation">一共：18 + 30 = 48</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>但是，哪里可以更简单？</h2>
+    <p class="center">观察所有袋子。它们有什么一样？</p>
+    <div class="stage">
+      <div class="bag-row same-pack">
+        <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
+        <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
+        <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
+      </div>
+    </div>
+    <p class="center">每一包都是 6 颗。</p>
+  </section>
+
+  <section class="slide">
+    <h2>既然每包一样多</h2>
+    <p class="center">就可以先数一共有几包。</p>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">爸爸 3 包 + 妈妈 5 包</div>
+        <div class="mini-equation">一共 8 包</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>再乘每包的数量</h2>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">一共 8 包</div>
+        <div class="mini-equation">每包 6 颗</div>
+        <div class="mini-equation">8 × 6 = 48</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>两种数法，其实一样</h2>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">3 × 6 + 5 × 6</div>
+        <div class="arrow-big center">=</div>
+        <div class="mini-equation">(3 + 5) × 6</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>什么时候可以这样合并？</h2>
+    <p class="center">关键不是爸爸妈妈，关键是“每包一样多”。</p>
+    <div class="stage">
+      <div class="note">
+        <p class="big">如果每包都是 n 个</p>
+        <p>爸爸 a 包，妈妈 b 包</p>
+        <p class="big">a×n + b×n = (a+b)×n</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>一个容易犯错的地方</h2>
+    <p class="center">不能只看“都是糖”，还要看“每包是不是一样多”。</p>
+    <div class="stage">
+      <div class="mistake">如果有的包 6 颗，有的包 7 颗，就不能直接合成 8 × 6。</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>最后记住这个画面</h2>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">先分开数：3×6 + 5×6</div>
+        <div class="mini-equation">先合包数：(3+5)×6</div>
+        <div class="mini-equation">因为每包都是 6 颗</div>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="../../assets/story-deck.js"></script>
+</body>
+</html>
