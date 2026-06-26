@@ -10,17 +10,34 @@ Mom brings 5 bags of candy.
 
 Every bag has 6 candies.
 
-The learner first counts separately:
+The learner first sees the concrete objects:
+
+```text
+3 bags × 6 candies per bag
+5 bags × 6 candies per bag
+```
+
+Then the lesson translates the objects into numbers:
 
 ```text
 3 * 6 + 5 * 6
 ```
 
-Then sees that all bags have the same size, so the bag counts can be combined first:
+Finally, the learner sees that all bags have the same size, so the bag counts can be combined first:
 
 ```text
 (3 + 5) * 6
 ```
+
+## Visual rule
+
+The lesson uses stable visual roles:
+
+- blue: number of bags
+- orange: candies per bag
+- green: total candies
+
+This reduces cognitive load for children and avoids jumping too quickly from objects to symbols.
 
 ## Teaching goal
 

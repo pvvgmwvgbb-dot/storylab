@@ -6,17 +6,39 @@
   <title>乘法分配律：糖果包</title>
   <link rel="stylesheet" href="../../assets/story-deck.css" />
   <style>
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .legend-item {
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 18px;
+      padding: 12px 18px;
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 900;
+      box-shadow: 0 6px 0 rgba(0,0,0,.13);
+    }
+
+    .bag-count { color: #1565c0; }
+    .per-bag { color: #c2410c; }
+    .total { color: #2d6a4f; }
+
     .bag-row {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 18px;
-      width: min(1040px, 92vw);
+      width: min(1060px, 92vw);
     }
 
     .bag {
-      width: 112px;
-      min-height: 142px;
+      width: 118px;
+      min-height: 152px;
       background: #fff;
       border: 4px solid #222;
       border-radius: 24px;
@@ -34,25 +56,33 @@
     .mom { background: #8ecae6; }
     .candy-six { font-size: 27px; line-height: 1.15; }
 
-    .person-card {
+    .visual-equation {
+      display: grid;
+      gap: 22px;
+      width: min(1080px, 94vw);
+      justify-items: center;
+    }
+
+    .term {
+      width: 100%;
       background: #fff;
       border: 4px solid #222;
-      border-radius: 26px;
-      padding: 24px 32px;
-      box-shadow: 0 8px 0 rgba(0,0,0,.16);
+      border-radius: 24px;
+      padding: 18px 24px;
+      box-shadow: 0 8px 0 rgba(0,0,0,.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: clamp(28px, 4vw, 58px);
+      font-weight: 900;
       text-align: center;
-      min-width: min(420px, 90vw);
     }
 
-    .split-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 26px;
-      width: min(1100px, 94vw);
-      align-items: start;
-    }
+    .term.small { font-size: clamp(24px, 3.4vw, 46px); }
+    .math-symbol { color: #222; }
 
-    .formula-stack { display: grid; gap: 20px; width: min(1000px, 92vw); }
     .mini-equation {
       background: #fff;
       border: 4px solid #222;
@@ -74,19 +104,17 @@
       font-weight: 900;
     }
 
-    .mistake {
-      background: #fff;
-      border: 4px dashed #d00000;
-      border-radius: 22px;
-      padding: 20px 28px;
-      font-size: clamp(30px, 4vw, 54px);
-      font-weight: 900;
-      text-align: center;
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      width: min(1080px, 94vw);
+      align-items: start;
     }
 
     @media (max-width: 860px) {
-      .split-grid { grid-template-columns: 1fr; }
-      .bag { width: 90px; min-height: 124px; }
+      .two-column { grid-template-columns: 1fr; }
+      .bag { width: 94px; min-height: 128px; }
     }
   </style>
 </head>
@@ -94,142 +122,143 @@
 <div class="deck">
   <section class="slide active">
     <h1>糖果包里的乘法秘密</h1>
-    <p class="center">今天不是学一个新公式，而是发现：什么时候可以先合起来再乘。</p>
-    <div class="stage"><div class="emoji">👨 🛍️ + 👩 🛍️ = ?</div></div>
+    <p class="center">今天只看一件事：包数可以先合起来吗？</p>
+    <div class="stage"><div class="emoji">🛍️🛍️🛍️ + 🛍️🛍️🛍️🛍️🛍️</div></div>
+    <div class="legend">
+      <div class="legend-item bag-count">蓝色数字：有几包</div>
+      <div class="legend-item per-bag">橙色数字：每包几颗</div>
+    </div>
   </section>
 
   <section class="slide">
     <h2>爸爸回家了</h2>
-    <p class="center">爸爸说：我给你带了 3 包糖。</p>
+    <p class="center">爸爸带了 <span class="bag-count">3 包</span>，每包 <span class="per-bag">6 颗</span>。</p>
     <div class="stage">
       <div class="bag-row">
-        <div class="bag dad"><div>爸爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
-        <div class="bag dad"><div>爸爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
-        <div class="bag dad"><div>爸爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+        <div class="bag dad"><div>爸爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6颗</span></div></div>
+        <div class="bag dad"><div>爸爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6颗</span></div></div>
+        <div class="bag dad"><div>爸爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6颗</span></div></div>
       </div>
     </div>
+    <p class="center med"><span class="bag-count">🛍️🛍️🛍️ = 3 包</span></p>
   </section>
 
   <section class="slide">
     <h2>妈妈也回家了</h2>
-    <p class="center">妈妈不知道爸爸已经买了。她也买了 5 包。</p>
+    <p class="center">妈妈带了 <span class="bag-count">5 包</span>，每包也是 <span class="per-bag">6 颗</span>。</p>
     <div class="stage">
       <div class="bag-row">
-        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
-        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
-        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
-        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
-        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6颗</div></div>
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6颗</span></div></div>
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6颗</span></div></div>
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6颗</span></div></div>
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6颗</span></div></div>
+        <div class="bag mom"><div>妈妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6颗</span></div></div>
       </div>
     </div>
+    <p class="center med"><span class="bag-count">🛍️🛍️🛍️🛍️🛍️ = 5 包</span></p>
   </section>
 
   <section class="slide">
-    <h2>小朋友开始数</h2>
-    <p class="center">他先分开数：爸爸的，妈妈的。</p>
+    <h2>先分开数，也可以</h2>
+    <p class="center">先看爸爸的，再看妈妈的。</p>
     <div class="stage">
-      <div class="split-grid">
-        <div class="person-card">
-          <p class="med">爸爸的糖</p>
-          <p class="big">3 × 6</p>
-        </div>
-        <div class="person-card">
-          <p class="med">妈妈的糖</p>
-          <p class="big">5 × 6</p>
-        </div>
+      <div class="two-column">
+        <div class="term small"><span class="bag-count">🛍️🛍️🛍️</span><span class="math-symbol">×</span><span class="per-bag">🍬🍬🍬🍬🍬🍬</span><span class="math-symbol">=</span><span class="total">18</span></div>
+        <div class="term small"><span class="bag-count">🛍️🛍️🛍️🛍️🛍️</span><span class="math-symbol">×</span><span class="per-bag">🍬🍬🍬🍬🍬🍬</span><span class="math-symbol">=</span><span class="total">30</span></div>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>这样当然可以</h2>
+    <h2>把图变成数字</h2>
+    <p class="center">这一步是翻译，不是新的计算。</p>
     <div class="stage">
-      <div class="formula-stack">
-        <div class="mini-equation">爸爸：3 × 6 = 18</div>
-        <div class="mini-equation">妈妈：5 × 6 = 30</div>
-        <div class="mini-equation">一共：18 + 30 = 48</div>
+      <div class="visual-equation">
+        <div class="term"><span class="bag-count">🛍️🛍️🛍️</span><span class="math-symbol">×</span><span class="per-bag">🍬🍬🍬🍬🍬🍬</span><span class="math-symbol">→</span><span><span class="bag-count">3</span> × <span class="per-bag">6</span></span></div>
+        <div class="term"><span class="bag-count">🛍️🛍️🛍️🛍️🛍️</span><span class="math-symbol">×</span><span class="per-bag">🍬🍬🍬🍬🍬🍬</span><span class="math-symbol">→</span><span><span class="bag-count">5</span> × <span class="per-bag">6</span></span></div>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>但是，哪里可以更简单？</h2>
-    <p class="center">观察所有袋子。它们有什么一样？</p>
+    <h2>分开数的结果</h2>
+    <div class="stage">
+      <div class="visual-equation">
+        <div class="term"><span class="bag-count">3</span> × <span class="per-bag">6</span> = <span class="total">18</span></div>
+        <div class="term"><span class="bag-count">5</span> × <span class="per-bag">6</span> = <span class="total">30</span></div>
+        <div class="term"><span class="total">18 + 30 = 48</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>还有更简单的看法</h2>
+    <p class="center">观察所有糖包。真正相同的是：<span class="per-bag">每包都是 6 颗</span>。</p>
     <div class="stage">
       <div class="bag-row same-pack">
-        <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
-        <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
-        <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
-        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
-        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
-        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
-        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
-        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div>6</div></div>
-      </div>
-    </div>
-    <p class="center">每一包都是 6 颗。</p>
-  </section>
-
-  <section class="slide">
-    <h2>既然每包一样多</h2>
-    <p class="center">就可以先数一共有几包。</p>
-    <div class="stage">
-      <div class="formula-stack">
-        <div class="mini-equation">爸爸 3 包 + 妈妈 5 包</div>
-        <div class="mini-equation">一共 8 包</div>
+        <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+        <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+        <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+        <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>再乘每包的数量</h2>
+    <h2>先合并包数</h2>
+    <p class="center">因为每包一样多，所以可以先只数袋子。</p>
     <div class="stage">
-      <div class="formula-stack">
-        <div class="mini-equation">一共 8 包</div>
-        <div class="mini-equation">每包 6 颗</div>
-        <div class="mini-equation">8 × 6 = 48</div>
+      <div class="visual-equation">
+        <div class="term"><span class="bag-count">🛍️🛍️🛍️</span><span class="math-symbol">+</span><span class="bag-count">🛍️🛍️🛍️🛍️🛍️</span></div>
+        <div class="arrow-big">↓</div>
+        <div class="term"><span class="bag-count">3 包 + 5 包 = 8 包</span></div>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>两种数法，其实一样</h2>
+    <h2>再乘每包 6 颗</h2>
     <div class="stage">
-      <div class="formula-stack">
-        <div class="mini-equation">3 × 6 + 5 × 6</div>
-        <div class="arrow-big center">=</div>
-        <div class="mini-equation">(3 + 5) × 6</div>
+      <div class="visual-equation">
+        <div class="term"><span class="bag-count">8 包</span><span class="math-symbol">×</span><span class="per-bag">每包 6 颗</span></div>
+        <div class="term"><span class="bag-count">8</span> × <span class="per-bag">6</span> = <span class="total">48</span></div>
       </div>
     </div>
   </section>
 
   <section class="slide">
-    <h2>什么时候可以这样合并？</h2>
-    <p class="center">关键不是爸爸妈妈，关键是“每包一样多”。</p>
+    <h2>两种数法，是同一件事</h2>
     <div class="stage">
-      <div class="note">
-        <p class="big">如果每包都是 n 个</p>
-        <p>爸爸 a 包，妈妈 b 包</p>
-        <p class="big">a×n + b×n = (a+b)×n</p>
+      <div class="visual-equation">
+        <div class="term small"><span class="bag-count">🛍️🛍️🛍️</span> × <span class="per-bag">6颗</span> + <span class="bag-count">🛍️🛍️🛍️🛍️🛍️</span> × <span class="per-bag">6颗</span></div>
+        <div class="arrow-big">=</div>
+        <div class="term small">(<span class="bag-count">🛍️🛍️🛍️</span> + <span class="bag-count">🛍️🛍️🛍️🛍️🛍️</span>) × <span class="per-bag">6颗</span></div>
+        <div class="term"><span class="bag-count">3</span>×<span class="per-bag">6</span> + <span class="bag-count">5</span>×<span class="per-bag">6</span> = (<span class="bag-count">3</span>+<span class="bag-count">5</span>)×<span class="per-bag">6</span></div>
       </div>
-    </div>
-  </section>
-
-  <section class="slide">
-    <h2>一个容易犯错的地方</h2>
-    <p class="center">不能只看“都是糖”，还要看“每包是不是一样多”。</p>
-    <div class="stage">
-      <div class="mistake">如果有的包 6 颗，有的包 7 颗，就不能直接合成 8 × 6。</div>
     </div>
   </section>
 
   <section class="slide">
     <h2>最后记住这个画面</h2>
+    <p class="center">不要只记数字，要记住“同样大小的包可以先合起来”。</p>
     <div class="stage">
-      <div class="formula-stack">
-        <div class="mini-equation">先分开数：3×6 + 5×6</div>
-        <div class="mini-equation">先合包数：(3+5)×6</div>
-        <div class="mini-equation">因为每包都是 6 颗</div>
+      <div class="visual-equation">
+        <div class="term small"><span class="bag-count">爸爸 3 包</span> + <span class="bag-count">妈妈 5 包</span> → <span class="bag-count">一共 8 包</span></div>
+        <div class="bag-row same-pack">
+          <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+          <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+          <div class="bag dad"><div>爸</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+          <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+          <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+          <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+          <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+          <div class="bag mom"><div>妈</div><div class="candy-six">🍬🍬🍬<br>🍬🍬🍬</div><div><span class="per-bag">6</span></div></div>
+        </div>
+        <div class="term"><span class="bag-count">8 包</span> × <span class="per-bag">6 颗</span> = <span class="total">48 颗</span></div>
       </div>
     </div>
   </section>
