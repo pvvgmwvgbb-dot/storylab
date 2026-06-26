@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>三角形面积：从矩形切开</title>
+  <link rel="stylesheet" href="../../assets/story-deck.css" />
+  <style>
+    .shape-board {
+      width: min(980px, 92vw);
+      height: min(560px, 62vh);
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 28px;
+      box-shadow: 0 8px 0 rgba(0,0,0,.16);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .shape-board svg {
+      width: 92%;
+      height: 92%;
+      display: block;
+    }
+
+    .rect-fill { fill: #ffcb69; stroke: #222; stroke-width: 4; }
+    .tri-a { fill: #ffcb69; stroke: #222; stroke-width: 4; }
+    .tri-b { fill: #8ecae6; stroke: #222; stroke-width: 4; }
+    .guide { stroke: #222; stroke-width: 6; stroke-dasharray: 16 12; }
+    .height-line { stroke: #fb8500; stroke-width: 6; stroke-dasharray: 10 10; }
+    .label { font: 700 28px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #222; }
+    .small-label { font: 700 22px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #555; }
+
+    .cut-line { stroke-dasharray: 620; stroke-dashoffset: 620; }
+    .active .cut-line { animation: drawCut 1.8s ease forwards; }
+
+    .separate-left, .separate-right { transform-box: fill-box; transform-origin: center; }
+    .active .separate-left { animation: moveLeft 2.4s ease forwards .4s; }
+    .active .separate-right { animation: moveRight 2.4s ease forwards .4s; }
+
+    @keyframes drawCut { to { stroke-dashoffset: 0; } }
+    @keyframes moveLeft { 45%, 100% { transform: translate(-48px, 24px); } }
+    @keyframes moveRight { 45%, 100% { transform: translate(48px, -24px); } }
+
+    .formula-stack {
+      display: grid;
+      gap: 22px;
+      width: min(980px, 92vw);
+    }
+
+    .mini-equation {
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 22px;
+      padding: 18px 28px;
+      font-size: clamp(30px, 5vw, 64px);
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 8px 0 rgba(0,0,0,.14);
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: min(980px, 92vw);
+      align-items: center;
+    }
+
+    @media (max-width: 760px) {
+      .two-column { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="deck">
+  <section class="slide active">
+    <h1>三角形面积</h1>
+    <p class="center">不要先画三角形。我们先画一个更容易算的图形：矩形。</p>
+    <div class="stage"><div class="emoji">▭ ➜ ◺</div></div>
+  </section>
+
+  <section class="slide">
+    <h2>先看一个矩形</h2>
+    <p class="center">长是 8，高是 5。它的面积是多少？</p>
+    <div class="stage">
+      <div class="shape-board">
+        <svg viewBox="0 0 720 420" role="img" aria-label="rectangle with base 8 and height 5">
+          <rect class="rect-fill" x="140" y="90" width="440" height="250" rx="8" />
+          <text class="label" x="360" y="382" text-anchor="middle">底 8</text>
+          <text class="label" x="100" y="220" text-anchor="middle" transform="rotate(-90 100 220)">高 5</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>矩形很好算</h2>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">矩形面积 = 底 × 高</div>
+        <div class="mini-equation">8 × 5 = 40</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>现在，用对角线切开</h2>
+    <p class="center">一条线，把矩形切成两个三角形。</p>
+    <div class="stage">
+      <div class="shape-board">
+        <svg viewBox="0 0 720 420" role="img" aria-label="rectangle cut by diagonal into two right triangles">
+          <rect class="rect-fill" x="140" y="90" width="440" height="250" rx="8" />
+          <line class="guide cut-line" x1="140" y1="340" x2="580" y2="90" />
+          <text class="small-label" x="360" y="382" text-anchor="middle">对角线切开</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>切开后发生了什么？</h2>
+    <p class="center">一个矩形，变成两个一样大的直角三角形。</p>
+    <div class="stage">
+      <div class="shape-board">
+        <svg viewBox="0 0 720 420" role="img" aria-label="two equal right triangles separated">
+          <polygon class="tri-a separate-left" points="140,340 140,90 580,90" />
+          <polygon class="tri-b separate-right" points="140,340 580,90 580,340" />
+          <text class="label" x="230" y="145">一半</text>
+          <text class="label" x="500" y="310">一半</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>所以，一个直角三角形是多少？</h2>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">矩形面积 = 40</div>
+        <div class="mini-equation">一个三角形 = 40 ÷ 2 = 20</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>直角三角形面积</h2>
+    <div class="stage">
+      <div class="note">
+        <p class="big">直角三角形面积 = 底 × 高 ÷ 2</p>
+        <p>因为它刚好是一个矩形的一半。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>那普通三角形呢？</h2>
+    <p class="center">普通三角形看起来不是矩形的一半。怎么办？</p>
+    <div class="stage">
+      <div class="shape-board">
+        <svg viewBox="0 0 720 420" role="img" aria-label="ordinary triangle with height line">
+          <polygon class="tri-a" points="130,330 590,330 390,100" />
+          <line class="height-line" x1="390" y1="100" x2="390" y2="330" />
+          <text class="label" x="360" y="374" text-anchor="middle">底</text>
+          <text class="label" x="420" y="230">高</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>把它分成两个直角三角形</h2>
+    <p class="center">从顶点往底边画一条高，就切成了左右两个直角三角形。</p>
+    <div class="stage">
+      <div class="shape-board">
+        <svg viewBox="0 0 720 420" role="img" aria-label="ordinary triangle split into two right triangles by height">
+          <polygon class="tri-a" points="130,330 390,330 390,100" />
+          <polygon class="tri-b" points="390,100 390,330 590,330" />
+          <line class="height-line" x1="390" y1="100" x2="390" y2="330" />
+          <text class="label" x="245" y="305" text-anchor="middle">左半</text>
+          <text class="label" x="495" y="305" text-anchor="middle">右半</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>两个直角三角形加起来</h2>
+    <div class="stage">
+      <div class="two-column">
+        <div class="note"><p class="med">左边面积</p><p>左底 × 高 ÷ 2</p></div>
+        <div class="note"><p class="med">右边面积</p><p>右底 × 高 ÷ 2</p></div>
+      </div>
+    </div>
+    <p class="center">它们的高是同一条高。</p>
+  </section>
+
+  <section class="slide">
+    <h2>合起来就是整个三角形</h2>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">左底 + 右底 = 整个底</div>
+        <div class="mini-equation">面积 = 底 × 高 ÷ 2</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>最后记住这个画面</h2>
+    <div class="stage">
+      <div class="note">
+        <p class="big">三角形面积 = 底 × 高 ÷ 2</p>
+        <p>不是因为公式规定，而是因为它可以看成“半个矩形”。</p>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="../../assets/story-deck.js"></script>
+</body>
+</html>
