@@ -29,9 +29,27 @@ Each lesson stores:
 - the interaction or action that lets the learner discover the pattern
 - the final abstraction that can be reused later
 
-## First lesson
+## Runnable lessons
 
-The first lesson is:
+Open any lesson `index.html` in a browser, or serve the repository with a simple local server.
+
+```text
+lessons/multiplication-candy/index.html
+lessons/division-monster/index.html
+lessons/arithmetic-series-staircase/index.html
+```
+
+Browser deck controls:
+
+- Right arrow / Space / Click: next page
+- Left arrow: previous page
+- F: fullscreen
+
+These decks intentionally use simple emoji and block shapes. The goal is to express the core idea clearly, not to distract the learner with decorative artwork.
+
+## First story source
+
+The first long-form story source is:
 
 ```text
 lessons/dinosaur-escape-arithmetic-series/
