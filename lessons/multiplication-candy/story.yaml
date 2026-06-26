@@ -1,0 +1,18 @@
+lesson:
+  id: multiplication-candy
+  title: Multiplication Candy
+  language: zh-CN
+  format: browser-deck
+  audience:
+    age_range: 7-10
+    mode: teacher-led, image-first
+  learning_goal: Understand multiplication as repeated addition with equal groups.
+
+concept:
+  name: Multiplication
+  concrete_model: five candy bags with equal candy count in each bag
+  transformation: equal groups -> repeated addition -> multiplication
+
+run:
+  entry: index.html
+  controls: right arrow, left arrow, space, click, fullscreen with F
