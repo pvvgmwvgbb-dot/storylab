@@ -10,9 +10,22 @@ lesson:
 
 concept:
   name: Arithmetic series
-  concrete_model: staircase made of square blocks
-  transformation: addition sequence -> staircase -> duplicated staircase -> rectangle -> formula
+  concrete_model: 8-step staircase made of square blocks
+  transformation: staircase -> copied staircase -> rotated copy -> snapped rectangle -> divide by two -> formula
+
+visual_design:
+  principle: simple blocks over decorative art
+  key_animation: copied staircase rotates and moves into the missing space to form an 8 by 9 rectangle
+  reason: the learner should see why the division by 2 is necessary
+
+example:
+  sequence: 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8
+  rectangle:
+    rows: 8
+    columns: 9
+    total_for_two_staircases: 72
+  one_staircase_sum: 36
 
 run:
   entry: index.html
-  controls: right arrow, left arrow, space, click, fullscreen with F
+  controls: right arrow, left arrow, space, click, fullscreen with F, replay button on transformation slide
