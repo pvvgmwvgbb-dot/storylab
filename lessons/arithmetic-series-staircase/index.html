@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>等差数列求和：阶梯法</title>
+  <link rel="stylesheet" href="../../assets/story-deck.css" />
+</head>
+<body>
+<div class="deck">
+  <section class="slide active">
+    <h1>等差数列求和</h1>
+    <p class="center">不先背公式。先把加法画成看得见的形状。</p>
+    <div class="stage"><div class="emoji">🧱🧱🧱</div></div>
+  </section>
+
+  <section class="slide">
+    <h2>今天的问题</h2>
+    <div class="stage"><div class="formula big">1 + 2 + 3 + ... + 10 = ?</div></div>
+    <p class="center">不要一个一个慢慢加。我们把它画出来。</p>
+  </section>
+
+  <section class="slide">
+    <h2>把加法画成阶梯</h2>
+    <div class="stage"><div class="card">
+      <div class="block-row"><div class="block"></div></div>
+      <div class="block-row"><div class="block"></div><div class="block"></div></div>
+      <div class="block-row"><div class="block"></div><div class="block"></div><div class="block"></div></div>
+      <div class="block-row"><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div></div>
+      <div class="block-row"><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div></div>
+      <div class="block-row"><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div></div>
+      <div class="block-row"><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div></div>
+      <div class="block-row"><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div></div>
+      <div class="block-row"><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div></div>
+      <div class="block-row"><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div><div class="block"></div></div>
+    </div></div>
+    <p class="center">第 1 层 1 个，第 2 层 2 个……第 10 层 10 个。</p>
+  </section>
+
+  <section class="slide">
+    <h2>复制一个阶梯，转过来</h2>
+    <div class="stage"><div class="card med">🧱 阶梯 A<br>➕<br>🔄 阶梯 B</div><div class="big">➡</div><div class="card med">一个整齐的长方形</div></div>
+    <p class="center">两个一样的阶梯，可以拼成一个好数的图形。</p>
+  </section>
+
+  <section class="slide">
+    <h2>长方形更好数</h2>
+    <div class="stage"><div class="card med">
+      <p>10 行</p>
+      <p>每行 11 个</p>
+      <p class="big">10 × 11 = 110</p>
+    </div></div>
+    <p class="center">注意：这是两个阶梯的总数。</p>
+  </section>
+
+  <section class="slide">
+    <h2>所以要除以 2</h2>
+    <div class="stage"><div class="formula big">110 ÷ 2 = 55</div></div>
+    <p class="center">因为我们只要其中一个阶梯。</p>
+  </section>
+
+  <section class="slide">
+    <h2>得到答案</h2>
+    <div class="stage"><div class="formula big">1 + 2 + ... + 10 = 55</div></div>
+  </section>
+
+  <section class="slide">
+    <h2>推广到 1 加到 100</h2>
+    <div class="stage"><div class="formula big">100 × 101 ÷ 2 = 5050</div></div>
+    <p class="center">同样的方法：复制、转过来、拼成长方形。</p>
+  </section>
+
+  <section class="slide">
+    <h2>真正的公式</h2>
+    <div class="stage"><div class="note"><p class="big">总和 = (首项 + 末项) × 项数 ÷ 2</p><p>也可以理解成：平均数 × 个数。</p></div></div>
+  </section>
+</div>
+<script src="../../assets/story-deck.js"></script>
+</body>
+</html>
