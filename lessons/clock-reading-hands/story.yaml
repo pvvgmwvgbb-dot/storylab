@@ -1,0 +1,28 @@
+lesson:
+  id: clock-reading-hands
+  title: Clock Reading Hands
+  language: zh-CN
+  format: browser-deck
+  audience:
+    age_range: 7-10
+    mode: teacher-led, interactive
+  learning_goal: Understand that the clock face is a reference system and the hands encode the time.
+
+concept:
+  name: Analog clock reading
+  concrete_model: live clock hands over progressively simplified clock faces
+  transformation: full clock face -> partial reference face -> blank face -> same hand positions remain meaningful
+
+key_animation:
+  time_range: 9:00 to 9:30
+  minute_hand: sweeps from 12 to 6
+  hour_hand: sweeps from 9 to halfway between 9 and 10
+  purpose: explain why the hour hand is not exactly on 9 at 9:30
+
+practice:
+  type: random blank-face clock
+  purpose: read time from hands without numeric references
+
+run:
+  entry: index.html
+  controls: right arrow, left arrow, space, click, fullscreen with F, mode buttons, replay button, random button

@@ -39,6 +39,7 @@ lessons/distributive-candy-bags/index.html
 lessons/division-monster/index.html
 lessons/arithmetic-series-staircase/index.html
 lessons/triangle-area-rectangle-cut/index.html
+lessons/clock-reading-hands/index.html
 ```
 
 Browser deck controls:
