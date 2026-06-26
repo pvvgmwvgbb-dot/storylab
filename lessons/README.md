@@ -11,6 +11,7 @@ Runnable StoryLab lessons.
 | Division Monster | Repeated taking away and remainder | `division-monster/index.html` |
 | Arithmetic Series Staircase | Staircase-to-rectangle sum formula | `arithmetic-series-staircase/index.html` |
 | Triangle Area: Rectangle Cut | Rectangle cut and triangle area | `triangle-area-rectangle-cut/index.html` |
+| Clock Reading Hands | Analog clock face and hand positions | `clock-reading-hands/index.html` |
 | Dinosaur Escape: Arithmetic Series | Story source for dinosaur arithmetic-series lesson | `dinosaur-escape-arithmetic-series/story.yaml` |
 
 ## Browser deck controls
