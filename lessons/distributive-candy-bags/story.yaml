@@ -11,7 +11,12 @@ lesson:
 concept:
   name: Distributive property
   concrete_model: dad brings 3 candy bags, mom brings 5 candy bags, every bag has 6 candies
-  transformation: separate counts -> notice same bag size -> combine bag counts -> multiply once
+  transformation: concrete bags -> translate objects to numbers -> notice same bag size -> combine bag counts -> multiply once
+
+visual_roles:
+  bag_count: blue
+  candies_per_bag: orange
+  total_candies: green
 
 example:
   separate_count: 3 * 6 + 5 * 6
