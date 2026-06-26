@@ -6,17 +6,22 @@
   <title>看钟表：表盘和指针</title>
   <link rel="stylesheet" href="../../assets/story-deck.css" />
   <style>
-    .clock-wrap {
+    .clock-frame {
+      width: min(620px, 76vw, 58vh);
+      height: min(620px, 76vw, 58vh);
       display: grid;
-      justify-items: center;
-      gap: 16px;
+      place-items: center;
+      margin: 0 auto;
+    }
+
+    .clock-frame.wide {
+      width: min(720px, 60vw, 62vh);
+      height: min(720px, 60vw, 62vh);
     }
 
     .clock-card {
-      width: min(620px, 78vw);
-      height: min(620px, 78vw);
-      max-height: 62vh;
-      max-width: 62vh;
+      width: 100%;
+      height: 100%;
       background: #fff;
       border: 4px solid #222;
       border-radius: 32px;
@@ -25,17 +30,27 @@
       place-items: center;
     }
 
-    .clock-card.wide {
-      width: min(980px, 92vw);
-      max-width: none;
-      height: min(560px, 62vh);
-      max-height: none;
-    }
-
-    svg.clock {
+    .clock-card svg.clock {
       width: 92%;
       height: 92%;
       display: block;
+    }
+
+    .clock-stage {
+      flex: 1;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      justify-items: center;
+      align-items: center;
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .control-slot {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .clock-face { fill: #fff8e7; stroke: #222; stroke-width: 5; }
@@ -88,15 +103,25 @@
 
     .two-column {
       display: grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1fr .95fr;
       gap: 28px;
       width: min(1120px, 94vw);
       align-items: center;
+      justify-items: center;
+    }
+
+    .answer-text {
+      min-height: 64px;
+      display: grid;
+      place-items: center;
+      font-size: clamp(28px, 4vw, 58px);
+      font-weight: 900;
+      color: #2d6a4f;
     }
 
     @media (max-width: 900px) {
       .two-column { grid-template-columns: 1fr; }
-      .clock-card.wide { height: min(470px, 54vh); }
+      .clock-frame.wide { width: min(520px, 72vw, 48vh); height: min(520px, 72vw, 48vh); }
     }
   </style>
 </head>
@@ -105,15 +130,18 @@
   <section class="slide active">
     <h1>看钟表</h1>
     <p class="center">今天我们先分清楚：<b>表盘</b>只是参考，真正告诉时间的是<b>指针</b>。</p>
-    <div class="stage"><div id="liveFullClock" class="clock-card"></div></div>
+    <div class="clock-stage">
+      <div class="clock-frame"><div id="liveFullClock" class="clock-card"></div></div>
+      <div class="control-slot"></div>
+    </div>
   </section>
 
   <section class="slide">
     <h2>同一个时间，换三种表盘</h2>
     <p class="center">点击下面按钮。注意：表盘变了，但时针、分针、秒针没有变。</p>
-    <div class="stage">
-      <div class="clock-wrap">
-        <div id="modeClock" class="clock-card"></div>
+    <div class="clock-stage">
+      <div class="clock-frame"><div id="modeClock" class="clock-card"></div></div>
+      <div class="control-slot">
         <div class="mode-buttons">
           <button data-mode="full" class="active">完整数字</button>
           <button data-mode="quarter">只留 12 3 6 9</button>
@@ -126,27 +154,36 @@
   <section class="slide">
     <h2>第一层：完整表盘</h2>
     <p class="center">数字很多，最容易看。</p>
-    <div class="stage"><div id="fullClock" class="clock-card"></div></div>
+    <div class="clock-stage">
+      <div class="clock-frame"><div id="fullClock" class="clock-card"></div></div>
+      <div class="control-slot"></div>
+    </div>
   </section>
 
   <section class="slide">
     <h2>第二层：只保留关键参考点</h2>
     <p class="center">只留下 12、3、6、9。其他位置要靠你自己想。</p>
-    <div class="stage"><div id="quarterClock" class="clock-card"></div></div>
+    <div class="clock-stage">
+      <div class="clock-frame"><div id="quarterClock" class="clock-card"></div></div>
+      <div class="control-slot"></div>
+    </div>
   </section>
 
   <section class="slide">
     <h2>第三层：没有表盘提示</h2>
     <p class="center">现在只看指针的位置。表盘消失了，时间关系还在。</p>
-    <div class="stage"><div id="blankClock" class="clock-card"></div></div>
+    <div class="clock-stage">
+      <div class="clock-frame"><div id="blankClock" class="clock-card"></div></div>
+      <div class="control-slot"></div>
+    </div>
   </section>
 
   <section class="slide">
     <h2>9:00 到 9:30，指针怎么走？</h2>
-    <p class="center">分针走了半圈，时针只慢慢走到 9 和 10 的中间。</p>
+    <p class="center">这里保留全部整点，方便看出时针到了 9 和 10 的正中间。</p>
     <div class="stage">
       <div class="two-column">
-        <div id="animClock" class="clock-card wide"></div>
+        <div class="clock-frame wide"><div id="animClock" class="clock-card"></div></div>
         <div class="formula-stack">
           <div class="mini-equation"><span class="blue">分针</span>：从 12 到 6，走半圈</div>
           <div class="mini-equation"><span class="orange">时针</span>：从 9 到 9 和 10 中间</div>
@@ -169,12 +206,16 @@
 
   <section class="slide">
     <h2>随机挑战</h2>
-    <p class="center">没有数字、没有刻度。只看指针，猜一猜现在是几点几分。</p>
-    <div class="stage">
-      <div class="clock-wrap">
-        <div id="randomClock" class="clock-card"></div>
-        <button class="action-btn" id="newRandom" type="button">换一个随机时间</button>
+    <p class="center">先看空白表盘猜时间。点击“查看答案”后，会显示完整表盘和读数。</p>
+    <div class="clock-stage">
+      <div class="clock-frame"><div id="randomClock" class="clock-card"></div></div>
+      <div class="control-slot">
+        <div class="mode-buttons">
+          <button class="action-btn" id="showAnswer" type="button">查看答案</button>
+          <button class="action-btn" id="newRandom" type="button">换一个随机时间</button>
+        </div>
       </div>
+      <div class="answer-text" id="answerText"></div>
     </div>
   </section>
 </div>
@@ -264,19 +305,18 @@
     return { h: d.getHours(), m: d.getMinutes(), s: d.getSeconds() };
   }
 
-  const liveIds = ['liveFullClock', 'fullClock', 'quarterClock', 'blankClock'];
   function tickLive() {
     const t = currentParts();
+    const live = document.getElementById('liveFullClock');
     const full = document.getElementById('fullClock');
     const quarter = document.getElementById('quarterClock');
     const blank = document.getElementById('blankClock');
-    const live = document.getElementById('liveFullClock');
+    const modeClock = document.getElementById('modeClock');
+
     if (live) drawClock(live, { ...t, mode: 'full', showSecond: true });
     if (full) drawClock(full, { ...t, mode: 'full', showSecond: true });
     if (quarter) drawClock(quarter, { ...t, mode: 'quarter', showSecond: true });
     if (blank) drawClock(blank, { ...t, mode: 'blank', showSecond: true });
-
-    const modeClock = document.getElementById('modeClock');
     if (modeClock) drawClock(modeClock, { ...t, mode: window.clockMode || 'full', showSecond: true });
   }
 
@@ -298,10 +338,8 @@
     const elapsed = (now - animStart) % 5200;
     const p = Math.min(elapsed / 3600, 1);
     const minutes = 30 * p;
-    const h = 9;
-    const m = minutes;
     drawClock(target, {
-      mode: 'quarter', h, m, s: 0, showSecond: false,
+      mode: 'full', h: 9, m: minutes, s: 0, showSecond: false,
       minuteSweep: [0, 180 * p],
       hourSweep: [270, 270 + 15 * p],
       label: `9:${String(Math.round(minutes)).padStart(2, '0')}`
@@ -314,25 +352,41 @@
     animStart = performance.now();
   });
 
+  let randomState = { h: 12, m: 5, s: 0, revealed: false };
+
+  function formatTime(t) {
+    return `${String(t.h).padStart(2, '0')}:${String(t.m).padStart(2, '0')}`;
+  }
+
   function randomTime() {
     const h = Math.floor(Math.random() * 12) + 1;
     const m = Math.floor(Math.random() * 12) * 5;
-    return { h, m, s: 0 };
+    return { h, m, s: 0, revealed: false };
   }
 
   function drawRandom() {
     const target = document.getElementById('randomClock');
+    const answer = document.getElementById('answerText');
     if (!target) return;
-    drawClock(target, { ...randomTime(), mode: 'blank', showSecond: false });
+    drawClock(target, { ...randomState, mode: randomState.revealed ? 'full' : 'blank', showSecond: false });
+    if (answer) answer.textContent = randomState.revealed ? `答案：${formatTime(randomState)}` : '';
   }
 
   document.getElementById('newRandom')?.addEventListener('click', e => {
     e.stopPropagation();
+    randomState = randomTime();
+    drawRandom();
+  });
+
+  document.getElementById('showAnswer')?.addEventListener('click', e => {
+    e.stopPropagation();
+    randomState.revealed = true;
     drawRandom();
   });
 
   tickLive();
   setInterval(tickLive, 1000);
+  randomState = randomTime();
   drawRandom();
   requestAnimationFrame(drawAnimationFrame);
 </script>
