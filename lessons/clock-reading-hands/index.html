@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>看钟表：表盘和指针</title>
+  <link rel="stylesheet" href="../../assets/story-deck.css" />
+  <style>
+    .clock-wrap {
+      display: grid;
+      justify-items: center;
+      gap: 16px;
+    }
+
+    .clock-card {
+      width: min(620px, 78vw);
+      height: min(620px, 78vw);
+      max-height: 62vh;
+      max-width: 62vh;
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 32px;
+      box-shadow: 0 8px 0 rgba(0,0,0,.16);
+      display: grid;
+      place-items: center;
+    }
+
+    .clock-card.wide {
+      width: min(980px, 92vw);
+      max-width: none;
+      height: min(560px, 62vh);
+      max-height: none;
+    }
+
+    svg.clock {
+      width: 92%;
+      height: 92%;
+      display: block;
+    }
+
+    .clock-face { fill: #fff8e7; stroke: #222; stroke-width: 5; }
+    .tick { stroke: #222; stroke-width: 3; stroke-linecap: round; }
+    .tick.major { stroke-width: 6; }
+    .num { font: 900 28px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #222; dominant-baseline: middle; text-anchor: middle; }
+    .ref-num { font: 900 34px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #222; dominant-baseline: middle; text-anchor: middle; }
+    .hand-hour { stroke: #222; stroke-width: 10; stroke-linecap: round; }
+    .hand-minute { stroke: #1565c0; stroke-width: 7; stroke-linecap: round; }
+    .hand-second { stroke: #d00000; stroke-width: 3; stroke-linecap: round; }
+    .pin { fill: #222; }
+    .sweep-minute { fill: rgba(21,101,192,.20); stroke: none; }
+    .sweep-hour { fill: rgba(251,133,0,.28); stroke: none; }
+    .label { font: 800 24px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #222; }
+    .blue { color: #1565c0; }
+    .red { color: #d00000; }
+    .orange { color: #c2410c; }
+
+    .mode-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .mode-buttons button, .action-btn {
+      border: 4px solid #222;
+      background: #fff;
+      border-radius: 999px;
+      padding: 12px 20px;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 rgba(0,0,0,.14);
+    }
+
+    .mode-buttons button.active { background: #ffcb69; }
+
+    .formula-stack { display: grid; gap: 18px; width: min(1000px, 92vw); }
+    .mini-equation {
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 22px;
+      padding: 18px 26px;
+      font-size: clamp(28px, 4vw, 58px);
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 8px 0 rgba(0,0,0,.14);
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      width: min(1120px, 94vw);
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .two-column { grid-template-columns: 1fr; }
+      .clock-card.wide { height: min(470px, 54vh); }
+    }
+  </style>
+</head>
+<body>
+<div class="deck">
+  <section class="slide active">
+    <h1>看钟表</h1>
+    <p class="center">今天我们先分清楚：<b>表盘</b>只是参考，真正告诉时间的是<b>指针</b>。</p>
+    <div class="stage"><div id="liveFullClock" class="clock-card"></div></div>
+  </section>
+
+  <section class="slide">
+    <h2>同一个时间，换三种表盘</h2>
+    <p class="center">点击下面按钮。注意：表盘变了，但时针、分针、秒针没有变。</p>
+    <div class="stage">
+      <div class="clock-wrap">
+        <div id="modeClock" class="clock-card"></div>
+        <div class="mode-buttons">
+          <button data-mode="full" class="active">完整数字</button>
+          <button data-mode="quarter">只留 12 3 6 9</button>
+          <button data-mode="blank">没有任何参考点</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>第一层：完整表盘</h2>
+    <p class="center">数字很多，最容易看。</p>
+    <div class="stage"><div id="fullClock" class="clock-card"></div></div>
+  </section>
+
+  <section class="slide">
+    <h2>第二层：只保留关键参考点</h2>
+    <p class="center">只留下 12、3、6、9。其他位置要靠你自己想。</p>
+    <div class="stage"><div id="quarterClock" class="clock-card"></div></div>
+  </section>
+
+  <section class="slide">
+    <h2>第三层：没有表盘提示</h2>
+    <p class="center">现在只看指针的位置。表盘消失了，时间关系还在。</p>
+    <div class="stage"><div id="blankClock" class="clock-card"></div></div>
+  </section>
+
+  <section class="slide">
+    <h2>9:00 到 9:30，指针怎么走？</h2>
+    <p class="center">分针走了半圈，时针只慢慢走到 9 和 10 的中间。</p>
+    <div class="stage">
+      <div class="two-column">
+        <div id="animClock" class="clock-card wide"></div>
+        <div class="formula-stack">
+          <div class="mini-equation"><span class="blue">分针</span>：从 12 到 6，走半圈</div>
+          <div class="mini-equation"><span class="orange">时针</span>：从 9 到 9 和 10 中间</div>
+          <button class="action-btn" id="replayAnim" type="button">重播 9:00 → 9:30</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>为什么 9:30 的时针不是正对 9？</h2>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">30 分钟 = 半小时</div>
+        <div class="mini-equation">时针也要走一点点</div>
+        <div class="mini-equation">所以 9:30 的时针在 9 和 10 的中间</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>随机挑战</h2>
+    <p class="center">没有数字、没有刻度。只看指针，猜一猜现在是几点几分。</p>
+    <div class="stage">
+      <div class="clock-wrap">
+        <div id="randomClock" class="clock-card"></div>
+        <button class="action-btn" id="newRandom" type="button">换一个随机时间</button>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="../../assets/story-deck.js"></script>
+<script>
+  const NS = 'http://www.w3.org/2000/svg';
+
+  function polar(cx, cy, r, deg) {
+    const rad = (deg - 90) * Math.PI / 180;
+    return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
+  }
+
+  function handAngle(type, h, m, s) {
+    if (type === 'hour') return ((h % 12) + m / 60 + s / 3600) * 30;
+    if (type === 'minute') return (m + s / 60) * 6;
+    return s * 6;
+  }
+
+  function el(name, attrs = {}, text = '') {
+    const node = document.createElementNS(NS, name);
+    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+    if (text) node.textContent = text;
+    return node;
+  }
+
+  function sectorPath(cx, cy, r, startDeg, endDeg) {
+    const [sx, sy] = polar(cx, cy, r, startDeg);
+    const [ex, ey] = polar(cx, cy, r, endDeg);
+    const large = Math.abs(endDeg - startDeg) > 180 ? 1 : 0;
+    return `M ${cx} ${cy} L ${sx} ${sy} A ${r} ${r} 0 ${large} 1 ${ex} ${ey} Z`;
+  }
+
+  function drawClock(target, options) {
+    const {
+      mode = 'full', h = 10, m = 10, s = 0, showSecond = true,
+      minuteSweep = null, hourSweep = null, label = ''
+    } = options;
+
+    const svg = el('svg', { class: 'clock', viewBox: '0 0 420 420', role: 'img' });
+    const cx = 210, cy = 210;
+
+    svg.appendChild(el('circle', { class: 'clock-face', cx, cy, r: 180 }));
+
+    if (minuteSweep) svg.appendChild(el('path', { class: 'sweep-minute', d: sectorPath(cx, cy, 160, minuteSweep[0], minuteSweep[1]) }));
+    if (hourSweep) svg.appendChild(el('path', { class: 'sweep-hour', d: sectorPath(cx, cy, 112, hourSweep[0], hourSweep[1]) }));
+
+    if (mode !== 'blank') {
+      for (let i = 0; i < 60; i++) {
+        const major = i % 5 === 0;
+        if (mode === 'quarter' && !(i === 0 || i === 15 || i === 30 || i === 45)) continue;
+        const r1 = major ? 154 : 166;
+        const r2 = 174;
+        const [x1, y1] = polar(cx, cy, r1, i * 6);
+        const [x2, y2] = polar(cx, cy, r2, i * 6);
+        svg.appendChild(el('line', { class: major ? 'tick major' : 'tick', x1, y1, x2, y2 }));
+      }
+    }
+
+    if (mode === 'full' || mode === 'quarter') {
+      const nums = mode === 'full' ? [1,2,3,4,5,6,7,8,9,10,11,12] : [12,3,6,9];
+      nums.forEach(n => {
+        const deg = n % 12 * 30;
+        const [x, y] = polar(cx, cy, 132, deg);
+        svg.appendChild(el('text', { class: mode === 'full' ? 'num' : 'ref-num', x, y }, String(n)));
+      });
+    }
+
+    const ha = handAngle('hour', h, m, s);
+    const ma = handAngle('minute', h, m, s);
+    const sa = handAngle('second', h, m, s);
+    const [hx, hy] = polar(cx, cy, 95, ha);
+    const [mx, my] = polar(cx, cy, 138, ma);
+    const [sx, sy] = polar(cx, cy, 154, sa);
+
+    svg.appendChild(el('line', { class: 'hand-hour', x1: cx, y1: cy, x2: hx, y2: hy }));
+    svg.appendChild(el('line', { class: 'hand-minute', x1: cx, y1: cy, x2: mx, y2: my }));
+    if (showSecond) svg.appendChild(el('line', { class: 'hand-second', x1: cx, y1: cy, x2: sx, y2: sy }));
+    svg.appendChild(el('circle', { class: 'pin', cx, cy, r: 8 }));
+    if (label) svg.appendChild(el('text', { class: 'label', x: cx, y: 395, 'text-anchor': 'middle' }, label));
+
+    target.innerHTML = '';
+    target.appendChild(svg);
+  }
+
+  function currentParts() {
+    const d = new Date();
+    return { h: d.getHours(), m: d.getMinutes(), s: d.getSeconds() };
+  }
+
+  const liveIds = ['liveFullClock', 'fullClock', 'quarterClock', 'blankClock'];
+  function tickLive() {
+    const t = currentParts();
+    const full = document.getElementById('fullClock');
+    const quarter = document.getElementById('quarterClock');
+    const blank = document.getElementById('blankClock');
+    const live = document.getElementById('liveFullClock');
+    if (live) drawClock(live, { ...t, mode: 'full', showSecond: true });
+    if (full) drawClock(full, { ...t, mode: 'full', showSecond: true });
+    if (quarter) drawClock(quarter, { ...t, mode: 'quarter', showSecond: true });
+    if (blank) drawClock(blank, { ...t, mode: 'blank', showSecond: true });
+
+    const modeClock = document.getElementById('modeClock');
+    if (modeClock) drawClock(modeClock, { ...t, mode: window.clockMode || 'full', showSecond: true });
+  }
+
+  window.clockMode = 'full';
+  document.querySelectorAll('[data-mode]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      window.clockMode = btn.dataset.mode;
+      document.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('active', b === btn));
+      tickLive();
+    });
+  });
+
+  let animStart = 0;
+  function drawAnimationFrame(now) {
+    const target = document.getElementById('animClock');
+    if (!target) return;
+    if (!animStart) animStart = now;
+    const elapsed = (now - animStart) % 5200;
+    const p = Math.min(elapsed / 3600, 1);
+    const minutes = 30 * p;
+    const h = 9;
+    const m = minutes;
+    drawClock(target, {
+      mode: 'quarter', h, m, s: 0, showSecond: false,
+      minuteSweep: [0, 180 * p],
+      hourSweep: [270, 270 + 15 * p],
+      label: `9:${String(Math.round(minutes)).padStart(2, '0')}`
+    });
+    requestAnimationFrame(drawAnimationFrame);
+  }
+
+  document.getElementById('replayAnim')?.addEventListener('click', e => {
+    e.stopPropagation();
+    animStart = performance.now();
+  });
+
+  function randomTime() {
+    const h = Math.floor(Math.random() * 12) + 1;
+    const m = Math.floor(Math.random() * 12) * 5;
+    return { h, m, s: 0 };
+  }
+
+  function drawRandom() {
+    const target = document.getElementById('randomClock');
+    if (!target) return;
+    drawClock(target, { ...randomTime(), mode: 'blank', showSecond: false });
+  }
+
+  document.getElementById('newRandom')?.addEventListener('click', e => {
+    e.stopPropagation();
+    drawRandom();
+  });
+
+  tickLive();
+  setInterval(tickLive, 1000);
+  drawRandom();
+  requestAnimationFrame(drawAnimationFrame);
+</script>
+</body>
+</html>
