@@ -47,7 +47,9 @@
 
     .sq-a { fill: #ffcb69; stroke: #222; stroke-width: 2; }
     .sq-b { fill: #8ecae6; stroke: #222; stroke-width: 2; }
-    .sq-ghost { fill: none; stroke: #1565c0; stroke-width: 3; stroke-dasharray: 8 8; opacity: .8; }
+    .copy-layer { mix-blend-mode: multiply; }
+    .sq-ghost { fill: none; stroke: #1565c0; stroke-width: 3; stroke-dasharray: 8 8; opacity: .45; }
+    .rotation-center { fill: #d00000; opacity: 0; }
     .rect-outline { fill: none; stroke: #fb8500; stroke-width: 5; stroke-linejoin: round; }
     .svg-label {
       font: 800 24px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
@@ -78,6 +80,30 @@
       font-weight: 800;
       cursor: pointer;
     }
+
+    .speed-controls {
+      position: absolute;
+      right: 18px;
+      bottom: 68px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #555;
+    }
+
+    .speed-controls button {
+      border: 2px solid #222;
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .speed-controls button.active { background: #ffcb69; }
 
     .animation-note {
       position: absolute;
@@ -135,12 +161,18 @@
   </section>
 
   <section class="slide transform-slide">
-    <h2>复制同一个台阶，让它补上缺口</h2>
-    <p class="center">蓝色不是突然出现的，它是从黄色台阶复制出来的一模一样的台阶。</p>
+    <h2>复制同一个台阶，旋转后直接到位</h2>
+    <p class="center">蓝色是黄色台阶的半透明复制品；重叠时还能看到下面的黄色。</p>
     <div class="stage">
       <div class="transform-stage" id="transformStage" aria-label="staircase duplicate animation">
-        <svg id="stairSvg" viewBox="0 0 760 440" role="img" aria-label="A staircase is duplicated, rotated, and moved to complete a rectangle"></svg>
+        <svg id="stairSvg" viewBox="0 0 760 440" role="img" aria-label="A staircase is duplicated and rotated once to complete a rectangle"></svg>
         <div class="animation-note">原来的台阶：1 + 2 + 3 + 4 + 5 + 6 + 7 + 8</div>
+        <div class="speed-controls" onclick="event.stopPropagation()">
+          速度
+          <button type="button" data-speed="9000">慢</button>
+          <button type="button" data-speed="6500" class="active">中</button>
+          <button type="button" data-speed="4200">快</button>
+        </div>
         <button class="replay" type="button" onclick="replayTransform(event)">重播动画</button>
       </div>
     </div>
@@ -196,9 +228,12 @@
   const N = 8;
   const BASE_X = 172;
   const BASE_Y = 72;
-  const CENTER_X = (N * STEP - GAP) / 2;
-  const CENTER_Y = (N * STEP - GAP) / 2;
+  const FINAL_WIDTH = N * STEP + CELL;
+  const FINAL_HEIGHT = (N - 1) * STEP + CELL;
+  const ROTATE_CX = BASE_X + FINAL_WIDTH / 2;
+  const ROTATE_CY = BASE_Y + FINAL_HEIGHT / 2;
   let stairAnimationId = null;
+  let stairDuration = 6500;
 
   function svgEl(name, attrs = {}, text = '') {
     const node = document.createElementNS(SVG_NS, name);
@@ -208,21 +243,14 @@
   }
 
   function addBlock(group, x, y, className) {
-    group.appendChild(svgEl('rect', {
-      class: className,
-      x,
-      y,
-      width: CELL,
-      height: CELL,
-      rx: 4
-    }));
+    group.appendChild(svgEl('rect', { class: className, x, y, width: CELL, height: CELL, rx: 4 }));
   }
 
   function buildStairGroup(className) {
     const group = svgEl('g');
     for (let row = 0; row < N; row++) {
       for (let col = 0; col <= row; col++) {
-        addBlock(group, col * STEP, row * STEP, className);
+        addBlock(group, BASE_X + col * STEP, BASE_Y + row * STEP, className);
       }
     }
     return group;
@@ -233,33 +261,25 @@
   }
 
   function setCopyTransform(copy, progress) {
-    let opacity = 0;
+    let opacity = 0.62;
     let rotation = 0;
-    let tx = BASE_X;
-    const ty = BASE_Y;
 
-    if (progress < 0.18) {
-      opacity = progress / 0.18;
-    } else {
-      opacity = 1;
+    if (progress < 0.14) {
+      opacity = 0.62 * (progress / 0.14);
     }
 
-    if (progress >= 0.22 && progress < 0.58) {
-      const p = easeInOut((progress - 0.22) / 0.36);
-      rotation = p * 180;
-    } else if (progress >= 0.58) {
-      rotation = 180;
+    if (progress >= 0.16) {
+      const p = easeInOut((progress - 0.16) / 0.74);
+      rotation = Math.min(p, 1) * 180;
     }
 
-    if (progress >= 0.58 && progress < 0.88) {
-      const p = easeInOut((progress - 0.58) / 0.30);
-      tx = BASE_X + STEP * p;
-    } else if (progress >= 0.88) {
-      tx = BASE_X + STEP;
+    if (progress >= 0.90) {
+      const p = Math.min((progress - 0.90) / 0.10, 1);
+      opacity = 0.62 + p * 0.28;
     }
 
     copy.setAttribute('opacity', opacity.toFixed(3));
-    copy.setAttribute('transform', `translate(${tx} ${ty}) rotate(${rotation} ${CENTER_X} ${CENTER_Y})`);
+    copy.setAttribute('transform', `rotate(${rotation} ${ROTATE_CX} ${ROTATE_CY})`);
   }
 
   function drawStairScene() {
@@ -269,46 +289,30 @@
 
     svg.appendChild(svgEl('text', { x: 70, y: 44, class: 'sum-label' }, '1 + 2 + 3 + 4 + 5 + 6 + 7 + 8'));
     svg.appendChild(svgEl('text', { x: 70, y: 74, class: 'soft-label' }, '每一行比上一行多 1 块，所以它是一个台阶。'));
-    svg.appendChild(svgEl('text', { x: 470, y: 44, class: 'soft-label', id: 'phaseText' }, '第 1 步：从原台阶复制一份'));
+    svg.appendChild(svgEl('text', { x: 470, y: 44, class: 'soft-label', id: 'phaseText' }, '第 1 步：复制品先和原台阶重叠'));
 
     for (let row = 0; row < N; row++) {
-      svg.appendChild(svgEl('text', {
-        x: BASE_X - 34,
-        y: BASE_Y + row * STEP + 23,
-        class: 'row-label',
-        'text-anchor': 'middle'
-      }, String(row + 1)));
+      svg.appendChild(svgEl('text', { x: BASE_X - 34, y: BASE_Y + row * STEP + 23, class: 'row-label', 'text-anchor': 'middle' }, String(row + 1)));
     }
 
     const original = buildStairGroup('sq-a');
-    original.setAttribute('transform', `translate(${BASE_X} ${BASE_Y})`);
+    original.setAttribute('id', 'originalStair');
     svg.appendChild(original);
 
-    const copy = buildStairGroup('sq-b');
+    const copy = buildStairGroup('sq-b copy-layer');
     copy.setAttribute('id', 'copyStair');
     copy.setAttribute('opacity', '0');
-    copy.setAttribute('transform', `translate(${BASE_X} ${BASE_Y}) rotate(0 ${CENTER_X} ${CENTER_Y})`);
+    copy.setAttribute('transform', `rotate(0 ${ROTATE_CX} ${ROTATE_CY})`);
     svg.appendChild(copy);
 
-    const ghost = svgEl('rect', {
-      class: 'sq-ghost',
-      x: BASE_X,
-      y: BASE_Y,
-      width: N * STEP - GAP,
-      height: N * STEP - GAP,
-      rx: 8
-    });
+    svg.appendChild(svgEl('circle', { class: 'rotation-center', cx: ROTATE_CX, cy: ROTATE_CY, r: 4 }));
+
+    const ghost = svgEl('rect', { class: 'sq-ghost', x: BASE_X, y: BASE_Y, width: FINAL_WIDTH, height: FINAL_HEIGHT, rx: 8 });
     svg.appendChild(ghost);
 
     const outline = svgEl('rect', {
-      id: 'rectangleOutline',
-      class: 'rect-outline',
-      x: BASE_X - 6,
-      y: BASE_Y - 6,
-      width: (N + 1) * STEP - GAP + 12,
-      height: N * STEP - GAP + 12,
-      rx: 10,
-      opacity: 0
+      id: 'rectangleOutline', class: 'rect-outline', x: BASE_X - 6, y: BASE_Y - 6,
+      width: FINAL_WIDTH + 12, height: FINAL_HEIGHT + 12, rx: 10, opacity: 0
     });
     svg.appendChild(outline);
   }
@@ -322,33 +326,40 @@
     if (stairAnimationId) cancelAnimationFrame(stairAnimationId);
 
     const start = performance.now();
-    const duration = 6200;
 
     function frame(now) {
-      const progress = Math.min((now - start) / duration, 1);
+      const progress = Math.min((now - start) / stairDuration, 1);
       setCopyTransform(copy, progress);
 
-      if (progress < 0.22) {
-        phaseText.textContent = '第 1 步：从原台阶复制一份';
+      if (progress < 0.16) {
+        phaseText.textContent = '第 1 步：复制品先和原台阶重叠，能看到下面还有黄色';
         outline.setAttribute('opacity', '0');
-      } else if (progress < 0.58) {
-        phaseText.textContent = '第 2 步：复制出来的台阶慢慢旋转';
-        outline.setAttribute('opacity', '0');
-      } else if (progress < 0.88) {
-        phaseText.textContent = '第 3 步：把它移动到缺口上';
+      } else if (progress < 0.90) {
+        phaseText.textContent = '第 2 步：复制品只绕一个固定中心旋转，直接到位';
         outline.setAttribute('opacity', '0');
       } else {
-        phaseText.textContent = '第 4 步：两个一样的台阶，刚好拼成长方形';
-        outline.setAttribute('opacity', String(Math.min((progress - 0.88) / 0.12, 1)));
+        phaseText.textContent = '第 3 步：两个一样的台阶，刚好拼成长方形';
+        outline.setAttribute('opacity', String(Math.min((progress - 0.90) / 0.10, 1)));
       }
 
-      if (progress < 1) {
-        stairAnimationId = requestAnimationFrame(frame);
-      }
+      if (progress < 1) stairAnimationId = requestAnimationFrame(frame);
     }
 
     stairAnimationId = requestAnimationFrame(frame);
   }
+
+  function setSpeed(ms, button) {
+    stairDuration = ms;
+    document.querySelectorAll('[data-speed]').forEach(btn => btn.classList.toggle('active', btn === button));
+    replayTransform();
+  }
+
+  document.querySelectorAll('[data-speed]').forEach(button => {
+    button.addEventListener('click', event => {
+      event.stopPropagation();
+      setSpeed(Number(button.dataset.speed), button);
+    });
+  });
 
   drawStairScene();
 
