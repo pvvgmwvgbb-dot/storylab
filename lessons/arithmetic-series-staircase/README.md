@@ -5,7 +5,7 @@ A browser-based story deck for explaining arithmetic series through an 8-step st
 ## Core transformation
 
 ```text
-8-step staircase -> copy -> rotate -> move -> snap into rectangle -> divide by 2 -> formula
+8-step staircase -> visible duplicate -> slow rotation -> slow move -> snap into rectangle -> divide by 2 -> formula
 ```
 
 ## Teaching goal
@@ -25,7 +25,17 @@ For 1 + 2 + ... + 8:
 72 ÷ 2 = 36 blocks
 ```
 
-The learner should remember the transformation, not just the final formula.
+The learner should see where the second staircase comes from. It is not a new shape; it is a duplicate of the original staircase.
+
+## Transformation slide notes
+
+The transformation slide now explicitly labels:
+
+```text
+1 + 2 + 3 + 4 + 5 + 6 + 7 + 8
+```
+
+The blue staircase is first shown directly on top of the yellow staircase, then rotates and moves into the missing space. This is intended to prevent the learner from thinking the blue blocks appear from nowhere.
 
 ## Run
 
