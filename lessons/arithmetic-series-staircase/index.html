@@ -235,6 +235,10 @@
   let stairAnimationId = null;
   let stairDuration = 6500;
 
+  function clamp01(value) {
+    return Math.max(0, Math.min(1, value));
+  }
+
   function svgEl(name, attrs = {}, text = '') {
     const node = document.createElementNS(SVG_NS, name);
     Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
@@ -257,7 +261,8 @@
   }
 
   function easeInOut(t) {
-    return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const x = clamp01(t);
+    return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
   }
 
   function setCopyTransform(copy, progress) {
@@ -265,21 +270,27 @@
     let rotation = 0;
 
     if (progress < 0.14) {
-      opacity = 0.62 * (progress / 0.14);
+      opacity = 0.62 * clamp01(progress / 0.14);
     }
 
     if (progress >= 0.16) {
-      const p = easeInOut((progress - 0.16) / 0.74);
-      rotation = Math.min(p, 1) * 180;
+      const rotationProgress = clamp01((progress - 0.16) / 0.74);
+      rotation = easeInOut(rotationProgress) * 180;
     }
 
     if (progress >= 0.90) {
-      const p = Math.min((progress - 0.90) / 0.10, 1);
-      opacity = 0.62 + p * 0.28;
+      rotation = 180;
+      const opacityProgress = clamp01((progress - 0.90) / 0.10);
+      opacity = 0.62 + opacityProgress * 0.28;
+    }
+
+    if (progress >= 1) {
+      rotation = 180;
+      opacity = 0.90;
     }
 
     copy.setAttribute('opacity', opacity.toFixed(3));
-    copy.setAttribute('transform', `rotate(${rotation} ${ROTATE_CX} ${ROTATE_CY})`);
+    copy.setAttribute('transform', `rotate(${rotation.toFixed(3)} ${ROTATE_CX} ${ROTATE_CY})`);
   }
 
   function drawStairScene() {
@@ -339,7 +350,7 @@
         outline.setAttribute('opacity', '0');
       } else {
         phaseText.textContent = '第 3 步：两个一样的台阶，刚好拼成长方形';
-        outline.setAttribute('opacity', String(Math.min((progress - 0.90) / 0.10, 1)));
+        outline.setAttribute('opacity', String(clamp01((progress - 0.90) / 0.10)));
       }
 
       if (progress < 1) stairAnimationId = requestAnimationFrame(frame);
