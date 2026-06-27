@@ -5,7 +5,7 @@ A browser-based story deck for explaining arithmetic series through an 8-step st
 ## Core transformation
 
 ```text
-8-step staircase -> visible duplicate -> slow rotation -> slow move -> snap into rectangle -> divide by 2 -> formula
+8-step staircase -> visible translucent duplicate -> single rotation into place -> rectangle -> divide by 2 -> formula
 ```
 
 ## Teaching goal
@@ -29,13 +29,21 @@ The learner should see where the second staircase comes from. It is not a new sh
 
 ## Transformation slide notes
 
-The transformation slide now explicitly labels:
+The transformation slide explicitly labels:
 
 ```text
 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8
 ```
 
-The blue staircase is first shown directly on top of the yellow staircase, then rotates and moves into the missing space. This is intended to prevent the learner from thinking the blue blocks appear from nowhere.
+The blue staircase is first shown directly on top of the yellow staircase with transparency, so the learner can see that there is still a yellow staircase underneath.
+
+Then the blue staircase performs one continuous rotation around a fixed, carefully chosen center. It does not rotate first and then translate. The rotation itself takes the copy directly into the missing space.
+
+The slide also includes speed controls:
+
+```text
+slow / medium / fast
+```
 
 ## Run
 
@@ -47,3 +55,4 @@ Controls:
 - Left arrow: previous page
 - F: fullscreen
 - Replay button on the transformation page: replay the copy-rotate-snap animation
+- Speed buttons on the transformation page: slow / medium / fast
