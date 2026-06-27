@@ -6,8 +6,6 @@
   <title>等差数列求和：台阶变长方形</title>
   <link rel="stylesheet" href="../../assets/story-deck.css" />
   <style>
-    :root { --unit: 30; --gap: 4; }
-
     .stair-wrap {
       display: inline-flex;
       flex-direction: column;
@@ -30,18 +28,9 @@
       border-radius: 5px;
     }
 
-    .sum-line {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-      font-size: clamp(26px, 4vw, 52px);
-      font-weight: 900;
-    }
-
     .transform-stage {
       width: min(1050px, 92vw);
-      height: min(560px, 62vh);
+      height: min(590px, 64vh);
       background: #fff;
       border: 4px solid #222;
       border-radius: 28px;
@@ -56,69 +45,27 @@
       display: block;
     }
 
-    .sq-a {
-      fill: #ffcb69;
-      stroke: #222;
-      stroke-width: 2;
-    }
-
-    .sq-b {
-      fill: #8ecae6;
-      stroke: #222;
-      stroke-width: 2;
-    }
-
-    .copy-group {
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center;
-    }
-
-    .active .copy-group {
-      animation: copyStairIntoPlace 5.2s cubic-bezier(.2,.8,.2,1) forwards;
-    }
-
-    .active .pulse-border {
-      opacity: 0;
-      animation: borderPulse 5.2s ease-in-out forwards;
-    }
-
-    .active .phase-copy { animation: showCopyLabel 5.2s ease-in-out forwards; }
-    .active .phase-rectangle { animation: showRectangleLabel 5.2s ease-in-out forwards; }
-
-    @keyframes copyStairIntoPlace {
-      0%   { opacity: 0; transform: translate(310px, -80px) rotate(0deg); }
-      12%  { opacity: 1; transform: translate(310px, -80px) rotate(0deg); }
-      42%  { opacity: 1; transform: translate(310px, -80px) rotate(180deg); }
-      76%  { opacity: 1; transform: translate(0, 0) rotate(0deg); }
-      100% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
-    }
-
-    @keyframes borderPulse {
-      0%, 72% { opacity: 0; }
-      82% { opacity: 1; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes showCopyLabel {
-      0%, 10% { opacity: 0; }
-      16%, 62% { opacity: 1; }
-      72%, 100% { opacity: 0; }
-    }
-
-    @keyframes showRectangleLabel {
-      0%, 72% { opacity: 0; }
-      82%, 100% { opacity: 1; }
-    }
-
+    .sq-a { fill: #ffcb69; stroke: #222; stroke-width: 2; }
+    .sq-b { fill: #8ecae6; stroke: #222; stroke-width: 2; }
+    .copy-layer { mix-blend-mode: multiply; }
+    .sq-ghost { fill: none; stroke: #1565c0; stroke-width: 3; stroke-dasharray: 8 8; opacity: .45; }
+    .rotation-center { fill: #d00000; opacity: 0; }
+    .rect-outline { fill: none; stroke: #fb8500; stroke-width: 5; stroke-linejoin: round; }
     .svg-label {
-      font: 700 24px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      font: 800 24px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
       fill: #222;
     }
-
     .soft-label {
       font: 700 20px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
       fill: #666;
+    }
+    .sum-label {
+      font: 900 28px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      fill: #222;
+    }
+    .row-label {
+      font: 800 18px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      fill: #555;
     }
 
     .replay {
@@ -134,10 +81,40 @@
       cursor: pointer;
     }
 
-    .count-card {
-      min-width: min(880px, 90vw);
+    .speed-controls {
+      position: absolute;
+      right: 18px;
+      bottom: 68px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #555;
     }
 
+    .speed-controls button {
+      border: 2px solid #222;
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .speed-controls button.active { background: #ffcb69; }
+
+    .animation-note {
+      position: absolute;
+      left: 24px;
+      bottom: 16px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #555;
+    }
+
+    .count-card { min-width: min(880px, 90vw); }
     .count-grid {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
@@ -184,40 +161,18 @@
   </section>
 
   <section class="slide transform-slide">
-    <h2>复制一个台阶，让它补上缺口</h2>
+    <h2>复制同一个台阶，旋转后直接到位</h2>
+    <p class="center">蓝色是黄色台阶的半透明复制品；重叠时还能看到下面的黄色。</p>
     <div class="stage">
-      <div class="transform-stage" id="transformStage">
-        <svg viewBox="0 0 760 420" role="img" aria-label="A staircase is copied, rotated, and moved to complete a rectangle">
-          <text x="76" y="48" class="soft-label">原来的台阶</text>
-          <text x="486" y="48" class="soft-label phase-copy">复制一份，旋转，再移动</text>
-          <text x="236" y="390" class="svg-label phase-rectangle">咔！两个台阶合成一个长方形</text>
-
-          <g transform="translate(170 76)">
-            <g class="original-group">
-              <rect class="sq-a" x="0" y="0" width="34" height="34" rx="4" />
-              <rect class="sq-a" x="0" y="38" width="34" height="34" rx="4" /><rect class="sq-a" x="38" y="38" width="34" height="34" rx="4" />
-              <rect class="sq-a" x="0" y="76" width="34" height="34" rx="4" /><rect class="sq-a" x="38" y="76" width="34" height="34" rx="4" /><rect class="sq-a" x="76" y="76" width="34" height="34" rx="4" />
-              <rect class="sq-a" x="0" y="114" width="34" height="34" rx="4" /><rect class="sq-a" x="38" y="114" width="34" height="34" rx="4" /><rect class="sq-a" x="76" y="114" width="34" height="34" rx="4" /><rect class="sq-a" x="114" y="114" width="34" height="34" rx="4" />
-              <rect class="sq-a" x="0" y="152" width="34" height="34" rx="4" /><rect class="sq-a" x="38" y="152" width="34" height="34" rx="4" /><rect class="sq-a" x="76" y="152" width="34" height="34" rx="4" /><rect class="sq-a" x="114" y="152" width="34" height="34" rx="4" /><rect class="sq-a" x="152" y="152" width="34" height="34" rx="4" />
-              <rect class="sq-a" x="0" y="190" width="34" height="34" rx="4" /><rect class="sq-a" x="38" y="190" width="34" height="34" rx="4" /><rect class="sq-a" x="76" y="190" width="34" height="34" rx="4" /><rect class="sq-a" x="114" y="190" width="34" height="34" rx="4" /><rect class="sq-a" x="152" y="190" width="34" height="34" rx="4" /><rect class="sq-a" x="190" y="190" width="34" height="34" rx="4" />
-              <rect class="sq-a" x="0" y="228" width="34" height="34" rx="4" /><rect class="sq-a" x="38" y="228" width="34" height="34" rx="4" /><rect class="sq-a" x="76" y="228" width="34" height="34" rx="4" /><rect class="sq-a" x="114" y="228" width="34" height="34" rx="4" /><rect class="sq-a" x="152" y="228" width="34" height="34" rx="4" /><rect class="sq-a" x="190" y="228" width="34" height="34" rx="4" /><rect class="sq-a" x="228" y="228" width="34" height="34" rx="4" />
-              <rect class="sq-a" x="0" y="266" width="34" height="34" rx="4" /><rect class="sq-a" x="38" y="266" width="34" height="34" rx="4" /><rect class="sq-a" x="76" y="266" width="34" height="34" rx="4" /><rect class="sq-a" x="114" y="266" width="34" height="34" rx="4" /><rect class="sq-a" x="152" y="266" width="34" height="34" rx="4" /><rect class="sq-a" x="190" y="266" width="34" height="34" rx="4" /><rect class="sq-a" x="228" y="266" width="34" height="34" rx="4" /><rect class="sq-a" x="266" y="266" width="34" height="34" rx="4" />
-            </g>
-
-            <g class="copy-group">
-              <rect class="sq-b" x="38" y="0" width="34" height="34" rx="4" /><rect class="sq-b" x="76" y="0" width="34" height="34" rx="4" /><rect class="sq-b" x="114" y="0" width="34" height="34" rx="4" /><rect class="sq-b" x="152" y="0" width="34" height="34" rx="4" /><rect class="sq-b" x="190" y="0" width="34" height="34" rx="4" /><rect class="sq-b" x="228" y="0" width="34" height="34" rx="4" /><rect class="sq-b" x="266" y="0" width="34" height="34" rx="4" /><rect class="sq-b" x="304" y="0" width="34" height="34" rx="4" />
-              <rect class="sq-b" x="76" y="38" width="34" height="34" rx="4" /><rect class="sq-b" x="114" y="38" width="34" height="34" rx="4" /><rect class="sq-b" x="152" y="38" width="34" height="34" rx="4" /><rect class="sq-b" x="190" y="38" width="34" height="34" rx="4" /><rect class="sq-b" x="228" y="38" width="34" height="34" rx="4" /><rect class="sq-b" x="266" y="38" width="34" height="34" rx="4" /><rect class="sq-b" x="304" y="38" width="34" height="34" rx="4" />
-              <rect class="sq-b" x="114" y="76" width="34" height="34" rx="4" /><rect class="sq-b" x="152" y="76" width="34" height="34" rx="4" /><rect class="sq-b" x="190" y="76" width="34" height="34" rx="4" /><rect class="sq-b" x="228" y="76" width="34" height="34" rx="4" /><rect class="sq-b" x="266" y="76" width="34" height="34" rx="4" /><rect class="sq-b" x="304" y="76" width="34" height="34" rx="4" />
-              <rect class="sq-b" x="152" y="114" width="34" height="34" rx="4" /><rect class="sq-b" x="190" y="114" width="34" height="34" rx="4" /><rect class="sq-b" x="228" y="114" width="34" height="34" rx="4" /><rect class="sq-b" x="266" y="114" width="34" height="34" rx="4" /><rect class="sq-b" x="304" y="114" width="34" height="34" rx="4" />
-              <rect class="sq-b" x="190" y="152" width="34" height="34" rx="4" /><rect class="sq-b" x="228" y="152" width="34" height="34" rx="4" /><rect class="sq-b" x="266" y="152" width="34" height="34" rx="4" /><rect class="sq-b" x="304" y="152" width="34" height="34" rx="4" />
-              <rect class="sq-b" x="228" y="190" width="34" height="34" rx="4" /><rect class="sq-b" x="266" y="190" width="34" height="34" rx="4" /><rect class="sq-b" x="304" y="190" width="34" height="34" rx="4" />
-              <rect class="sq-b" x="266" y="228" width="34" height="34" rx="4" /><rect class="sq-b" x="304" y="228" width="34" height="34" rx="4" />
-              <rect class="sq-b" x="304" y="266" width="34" height="34" rx="4" />
-            </g>
-
-            <rect class="pulse-border" x="-6" y="-6" width="350" height="312" rx="8" fill="none" stroke="#fb8500" stroke-width="5" />
-          </g>
-        </svg>
+      <div class="transform-stage" id="transformStage" aria-label="staircase duplicate animation">
+        <svg id="stairSvg" viewBox="0 0 760 440" role="img" aria-label="A staircase is duplicated and rotated once to complete a rectangle"></svg>
+        <div class="animation-note">原来的台阶：1 + 2 + 3 + 4 + 5 + 6 + 7 + 8</div>
+        <div class="speed-controls" onclick="event.stopPropagation()">
+          速度
+          <button type="button" data-speed="9000">慢</button>
+          <button type="button" data-speed="6500" class="active">中</button>
+          <button type="button" data-speed="4200">快</button>
+        </div>
         <button class="replay" type="button" onclick="replayTransform(event)">重播动画</button>
       </div>
     </div>
@@ -246,7 +201,7 @@
 
   <section class="slide">
     <h2>答案</h2>
-    <div class="stage"><div class="formula big">1 + 2 + 3 + ... + 8 = 36</div></div>
+    <div class="stage"><div class="formula big">1 + 2 + ... + 8 = 36</div></div>
   </section>
 
   <section class="slide">
@@ -266,13 +221,167 @@
 </div>
 <script src="../../assets/story-deck.js"></script>
 <script>
-  function replayTransform(event) {
-    event.stopPropagation();
-    const slide = document.querySelector('.transform-slide');
-    slide.classList.remove('active');
-    void slide.offsetWidth;
-    slide.classList.add('active');
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const CELL = 34;
+  const GAP = 4;
+  const STEP = CELL + GAP;
+  const N = 8;
+  const BASE_X = 172;
+  const BASE_Y = 72;
+  const FINAL_WIDTH = N * STEP + CELL;
+  const FINAL_HEIGHT = (N - 1) * STEP + CELL;
+  const ROTATE_CX = BASE_X + FINAL_WIDTH / 2;
+  const ROTATE_CY = BASE_Y + FINAL_HEIGHT / 2;
+  let stairAnimationId = null;
+  let stairDuration = 6500;
+
+  function clamp01(value) {
+    return Math.max(0, Math.min(1, value));
   }
+
+  function svgEl(name, attrs = {}, text = '') {
+    const node = document.createElementNS(SVG_NS, name);
+    Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+    if (text) node.textContent = text;
+    return node;
+  }
+
+  function addBlock(group, x, y, className) {
+    group.appendChild(svgEl('rect', { class: className, x, y, width: CELL, height: CELL, rx: 4 }));
+  }
+
+  function buildStairGroup(className) {
+    const group = svgEl('g');
+    for (let row = 0; row < N; row++) {
+      for (let col = 0; col <= row; col++) {
+        addBlock(group, BASE_X + col * STEP, BASE_Y + row * STEP, className);
+      }
+    }
+    return group;
+  }
+
+  function easeInOut(t) {
+    const x = clamp01(t);
+    return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+  }
+
+  function setCopyTransform(copy, progress) {
+    let opacity = 0.62;
+    let rotation = 0;
+
+    if (progress < 0.14) {
+      opacity = 0.62 * clamp01(progress / 0.14);
+    }
+
+    if (progress >= 0.16) {
+      const rotationProgress = clamp01((progress - 0.16) / 0.74);
+      rotation = easeInOut(rotationProgress) * 180;
+    }
+
+    if (progress >= 0.90) {
+      rotation = 180;
+      const opacityProgress = clamp01((progress - 0.90) / 0.10);
+      opacity = 0.62 + opacityProgress * 0.28;
+    }
+
+    if (progress >= 1) {
+      rotation = 180;
+      opacity = 0.90;
+    }
+
+    copy.setAttribute('opacity', opacity.toFixed(3));
+    copy.setAttribute('transform', `rotate(${rotation.toFixed(3)} ${ROTATE_CX} ${ROTATE_CY})`);
+  }
+
+  function drawStairScene() {
+    const svg = document.getElementById('stairSvg');
+    if (!svg) return;
+    svg.innerHTML = '';
+
+    svg.appendChild(svgEl('text', { x: 70, y: 44, class: 'sum-label' }, '1 + 2 + 3 + 4 + 5 + 6 + 7 + 8'));
+    svg.appendChild(svgEl('text', { x: 70, y: 74, class: 'soft-label' }, '每一行比上一行多 1 块，所以它是一个台阶。'));
+    svg.appendChild(svgEl('text', { x: 470, y: 44, class: 'soft-label', id: 'phaseText' }, '第 1 步：复制品先和原台阶重叠'));
+
+    for (let row = 0; row < N; row++) {
+      svg.appendChild(svgEl('text', { x: BASE_X - 34, y: BASE_Y + row * STEP + 23, class: 'row-label', 'text-anchor': 'middle' }, String(row + 1)));
+    }
+
+    const original = buildStairGroup('sq-a');
+    original.setAttribute('id', 'originalStair');
+    svg.appendChild(original);
+
+    const copy = buildStairGroup('sq-b copy-layer');
+    copy.setAttribute('id', 'copyStair');
+    copy.setAttribute('opacity', '0');
+    copy.setAttribute('transform', `rotate(0 ${ROTATE_CX} ${ROTATE_CY})`);
+    svg.appendChild(copy);
+
+    svg.appendChild(svgEl('circle', { class: 'rotation-center', cx: ROTATE_CX, cy: ROTATE_CY, r: 4 }));
+
+    const ghost = svgEl('rect', { class: 'sq-ghost', x: BASE_X, y: BASE_Y, width: FINAL_WIDTH, height: FINAL_HEIGHT, rx: 8 });
+    svg.appendChild(ghost);
+
+    const outline = svgEl('rect', {
+      id: 'rectangleOutline', class: 'rect-outline', x: BASE_X - 6, y: BASE_Y - 6,
+      width: FINAL_WIDTH + 12, height: FINAL_HEIGHT + 12, rx: 10, opacity: 0
+    });
+    svg.appendChild(outline);
+  }
+
+  function replayTransform(event) {
+    if (event) event.stopPropagation();
+    const copy = document.getElementById('copyStair');
+    const outline = document.getElementById('rectangleOutline');
+    const phaseText = document.getElementById('phaseText');
+    if (!copy || !outline || !phaseText) return;
+    if (stairAnimationId) cancelAnimationFrame(stairAnimationId);
+
+    const start = performance.now();
+
+    function frame(now) {
+      const progress = Math.min((now - start) / stairDuration, 1);
+      setCopyTransform(copy, progress);
+
+      if (progress < 0.16) {
+        phaseText.textContent = '第 1 步：复制品先和原台阶重叠，能看到下面还有黄色';
+        outline.setAttribute('opacity', '0');
+      } else if (progress < 0.90) {
+        phaseText.textContent = '第 2 步：复制品只绕一个固定中心旋转，直接到位';
+        outline.setAttribute('opacity', '0');
+      } else {
+        phaseText.textContent = '第 3 步：两个一样的台阶，刚好拼成长方形';
+        outline.setAttribute('opacity', String(clamp01((progress - 0.90) / 0.10)));
+      }
+
+      if (progress < 1) stairAnimationId = requestAnimationFrame(frame);
+    }
+
+    stairAnimationId = requestAnimationFrame(frame);
+  }
+
+  function setSpeed(ms, button) {
+    stairDuration = ms;
+    document.querySelectorAll('[data-speed]').forEach(btn => btn.classList.toggle('active', btn === button));
+    replayTransform();
+  }
+
+  document.querySelectorAll('[data-speed]').forEach(button => {
+    button.addEventListener('click', event => {
+      event.stopPropagation();
+      setSpeed(Number(button.dataset.speed), button);
+    });
+  });
+
+  drawStairScene();
+
+  const observer = new MutationObserver(() => {
+    const slide = document.querySelector('.transform-slide');
+    if (slide?.classList.contains('active')) {
+      drawStairScene();
+      replayTransform();
+    }
+  });
+  observer.observe(document.querySelector('.transform-slide'), { attributes: true, attributeFilter: ['class'] });
 </script>
 </body>
 </html>
