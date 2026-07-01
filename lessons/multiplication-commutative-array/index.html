@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>乘法交换律：3×6 = 6×3</title>
+  <link rel="stylesheet" href="../../assets/story-deck.css" />
+  <style>
+    .array-board {
+      width: min(1080px, 92vw);
+      height: min(560px, 62vh);
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 28px;
+      box-shadow: 0 8px 0 rgba(0,0,0,.16);
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .array-board svg {
+      width: 96%;
+      height: 96%;
+      display: block;
+    }
+
+    .block {
+      fill: #ffcb69;
+      stroke: #222;
+      stroke-width: 3;
+    }
+
+    .row-band { fill: rgba(255, 203, 105, .34); stroke: #fb8500; stroke-width: 4; }
+    .col-band { fill: rgba(142, 202, 230, .36); stroke: #1565c0; stroke-width: 4; }
+    .row-brace { stroke: #fb8500; stroke-width: 8; stroke-linecap: round; fill: none; }
+    .col-brace { stroke: #1565c0; stroke-width: 8; stroke-linecap: round; fill: none; }
+
+    .svg-label {
+      font: 900 28px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      fill: #222;
+      dominant-baseline: middle;
+      text-anchor: middle;
+    }
+
+    .small-label {
+      font: 800 22px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      fill: #555;
+      dominant-baseline: middle;
+      text-anchor: middle;
+    }
+
+    .factor-card {
+      fill: #fff;
+      stroke: #222;
+      stroke-width: 4;
+      filter: drop-shadow(0 5px 0 rgba(0,0,0,.16));
+    }
+
+    .factor-blue { fill: #8ecae6; }
+    .factor-orange { fill: #ffcb69; }
+    .formula-text {
+      font: 900 44px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      fill: #222;
+      dominant-baseline: middle;
+      text-anchor: middle;
+    }
+
+    .formula-note {
+      font: 800 21px -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      fill: #555;
+      dominant-baseline: middle;
+      text-anchor: middle;
+    }
+
+    .replay {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      border: 3px solid #222;
+      background: #fff;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .speed-controls {
+      position: absolute;
+      right: 18px;
+      bottom: 68px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #555;
+    }
+
+    .speed-controls button {
+      border: 2px solid #222;
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .speed-controls button.active { background: #ffcb69; }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 18px;
+      padding: 12px 18px;
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 900;
+      box-shadow: 0 6px 0 rgba(0,0,0,.13);
+    }
+
+    .orange { color: #c2410c; }
+    .blue { color: #1565c0; }
+
+    .formula-stack { display: grid; gap: 20px; width: min(1000px, 92vw); }
+    .mini-equation {
+      background: #fff;
+      border: 4px solid #222;
+      border-radius: 22px;
+      padding: 18px 26px;
+      font-size: clamp(30px, 4.5vw, 62px);
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 8px 0 rgba(0,0,0,.14);
+    }
+
+    @media (max-width: 760px) {
+      .array-board { height: 56vh; }
+      .speed-controls { bottom: 62px; }
+    }
+  </style>
+</head>
+<body>
+<div class="deck">
+  <section class="slide active">
+    <h1>3 × 6 = 6 × 3</h1>
+    <p class="center">先记住一句话：几乘几，就是几个几。</p>
+    <div class="stage"><div class="emoji">▦</div></div>
+  </section>
+
+  <section class="slide">
+    <h2>3 × 6 是什么？</h2>
+    <p class="center"><span class="orange">3 × 6</span> 不是先背答案，而是：<b>3 个 6</b>。</p>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation">3 × 6 = 3 个 6</div>
+        <div class="mini-equation">也就是：3 排，每排 6 个</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>先按“行”来看</h2>
+    <p class="center">3 排，每排 6 个。</p>
+    <div class="stage">
+      <div class="array-board"><svg id="rowArray" viewBox="0 0 760 420" aria-label="3 rows, each row has 6 blocks"></svg></div>
+    </div>
+  </section>
+
+  <section class="slide transform-slide">
+    <h2>同一批小方块，换一个看法</h2>
+    <p class="center">小方块不动；只是从“按行数”变成“按列数”。</p>
+    <div class="stage">
+      <div class="array-board" aria-label="commutative animation">
+        <svg id="commutativeSvg" viewBox="0 0 760 420" aria-label="same 18 blocks change grouping from rows to columns"></svg>
+        <div class="speed-controls" onclick="event.stopPropagation()">
+          速度
+          <button type="button" data-speed="9000">慢</button>
+          <button type="button" data-speed="6500" class="active">中</button>
+          <button type="button" data-speed="4200">快</button>
+        </div>
+        <button class="replay" type="button" onclick="replayCommutative(event)">重播动画</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>再按“列”来看</h2>
+    <p class="center">6 列，每列 3 个。</p>
+    <div class="stage">
+      <div class="array-board"><svg id="colArray" viewBox="0 0 760 420" aria-label="6 columns, each column has 3 blocks"></svg></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>所以它们相等</h2>
+    <div class="stage">
+      <div class="formula-stack">
+        <div class="mini-equation"><span class="orange">3 × 6</span> = 3 个 6</div>
+        <div class="mini-equation"><span class="blue">6 × 3</span> = 6 个 3</div>
+        <div class="mini-equation">小方块总数都是 18</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>最后记住这个画面</h2>
+    <p class="center">同一个长方形，可以横着数，也可以竖着数。</p>
+    <div class="stage">
+      <div class="array-board"><svg id="finalArray" viewBox="0 0 760 420" aria-label="3 times 6 equals 6 times 3 summary"></svg></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>结论</h2>
+    <div class="stage">
+      <div class="note">
+        <p class="big">3 × 6 = 6 × 3</p>
+        <p>乘的顺序交换了，总数没有变。</p>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="../../assets/story-deck.js"></script>
+<script>
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const ROWS = 3;
+  const COLS = 6;
+  const CELL = 48;
+  const GAP = 10;
+  const STEP = CELL + GAP;
+  const GRID_X = 206;
+  const GRID_Y = 132;
+  const GRID_W = COLS * CELL + (COLS - 1) * GAP;
+  const GRID_H = ROWS * CELL + (ROWS - 1) * GAP;
+  let animationId = null;
+  let animationDuration = 6500;
+
+  function clamp01(value) {
+    return Math.max(0, Math.min(1, value));
+  }
+
+  function easeInOut(t) {
+    const x = clamp01(t);
+    return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+  }
+
+  function el(name, attrs = {}, text = '') {
+    const node = document.createElementNS(SVG_NS, name);
+    for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
+    if (text) node.textContent = text;
+    return node;
+  }
+
+  function addBlocks(svg) {
+    const group = el('g', { id: 'blockGrid' });
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        group.appendChild(el('rect', {
+          class: 'block',
+          x: GRID_X + c * STEP,
+          y: GRID_Y + r * STEP,
+          width: CELL,
+          height: CELL,
+          rx: 8
+        }));
+      }
+    }
+    svg.appendChild(group);
+  }
+
+  function addRowBands(svg, opacity = 1) {
+    const group = el('g', { id: 'rowBands', opacity });
+    for (let r = 0; r < ROWS; r++) {
+      group.appendChild(el('rect', {
+        class: 'row-band',
+        x: GRID_X - 8,
+        y: GRID_Y + r * STEP - 8,
+        width: GRID_W + 16,
+        height: CELL + 16,
+        rx: 14
+      }));
+      group.appendChild(el('text', {
+        class: 'small-label',
+        x: GRID_X - 58,
+        y: GRID_Y + r * STEP + CELL / 2
+      }, `第${r + 1}个6`));
+    }
+    svg.appendChild(group);
+  }
+
+  function addColBands(svg, opacity = 1) {
+    const group = el('g', { id: 'colBands', opacity });
+    for (let c = 0; c < COLS; c++) {
+      group.appendChild(el('rect', {
+        class: 'col-band',
+        x: GRID_X + c * STEP - 8,
+        y: GRID_Y - 8,
+        width: CELL + 16,
+        height: GRID_H + 16,
+        rx: 14
+      }));
+      group.appendChild(el('text', {
+        class: 'small-label',
+        x: GRID_X + c * STEP + CELL / 2,
+        y: GRID_Y - 34
+      }, `第${c + 1}个3`));
+    }
+    svg.appendChild(group);
+  }
+
+  function addFormula(svg, idPrefix, left, right) {
+    const group = el('g', { id: `${idPrefix}Formula` });
+    group.appendChild(el('rect', { id: `${idPrefix}LeftCard`, class: 'factor-card factor-orange', x: left.x - 42, y: left.y - 34, width: 84, height: 68, rx: 16 }));
+    group.appendChild(el('text', { id: `${idPrefix}LeftText`, class: 'formula-text', x: left.x, y: left.y }, left.text));
+    group.appendChild(el('text', { class: 'formula-text', x: 380, y: 62 }, '×'));
+    group.appendChild(el('rect', { id: `${idPrefix}RightCard`, class: 'factor-card factor-blue', x: right.x - 42, y: right.y - 34, width: 84, height: 68, rx: 16 }));
+    group.appendChild(el('text', { id: `${idPrefix}RightText`, class: 'formula-text', x: right.x, y: right.y }, right.text));
+    group.appendChild(el('text', { id: `${idPrefix}Note`, class: 'formula-note', x: 380, y: 106 }, left.note));
+    svg.appendChild(group);
+  }
+
+  function drawStaticArray(targetId, mode) {
+    const svg = document.getElementById(targetId);
+    if (!svg) return;
+    svg.innerHTML = '';
+
+    if (mode === 'row') {
+      addRowBands(svg, 1);
+      addBlocks(svg);
+      addFormula(svg, targetId, { x: 324, y: 62, text: '3', note: '3 排，每排 6 个' }, { x: 436, y: 62, text: '6' });
+    } else if (mode === 'col') {
+      addColBands(svg, 1);
+      addBlocks(svg);
+      addFormula(svg, targetId, { x: 324, y: 62, text: '6', note: '6 列，每列 3 个' }, { x: 436, y: 62, text: '3' });
+    } else {
+      addRowBands(svg, .45);
+      addColBands(svg, .45);
+      addBlocks(svg);
+      svg.appendChild(el('text', { class: 'formula-text', x: 380, y: 62 }, '3 × 6 = 6 × 3'));
+      svg.appendChild(el('text', { class: 'formula-note', x: 380, y: 106 }, '同一批 18 个小方块，横着数和竖着数都一样'));
+    }
+  }
+
+  function drawAnimationScene() {
+    const svg = document.getElementById('commutativeSvg');
+    if (!svg) return;
+    svg.innerHTML = '';
+    addRowBands(svg, 1);
+    addColBands(svg, 0);
+    addBlocks(svg);
+    addFormula(svg, 'anim', { x: 324, y: 62, text: '3', note: '先看成：3 个 6' }, { x: 436, y: 62, text: '6' });
+  }
+
+  function setRect(node, cx, cy) {
+    node.setAttribute('x', cx - 42);
+    node.setAttribute('y', cy - 34);
+  }
+
+  function setText(node, cx, cy) {
+    node.setAttribute('x', cx);
+    node.setAttribute('y', cy);
+  }
+
+  function setAnimationProgress(progress) {
+    const p = clamp01(progress);
+    const rowBands = document.getElementById('rowBands');
+    const colBands = document.getElementById('colBands');
+    const leftCard = document.getElementById('animLeftCard');
+    const rightCard = document.getElementById('animRightCard');
+    const leftText = document.getElementById('animLeftText');
+    const rightText = document.getElementById('animRightText');
+    const note = document.getElementById('animNote');
+    if (!rowBands || !colBands || !leftCard || !rightCard || !leftText || !rightText || !note) return;
+
+    const switchProgress = easeInOut((p - 0.22) / 0.56);
+    rowBands.setAttribute('opacity', String(1 - switchProgress));
+    colBands.setAttribute('opacity', String(switchProgress));
+
+    const leftStart = { x: 324, y: 62 };
+    const rightStart = { x: 436, y: 62 };
+    const leftEnd = rightStart;
+    const rightEnd = leftStart;
+    const swap = easeInOut((p - 0.28) / 0.44);
+    const lift = Math.sin(swap * Math.PI) * 30;
+
+    const leftX = leftStart.x + (leftEnd.x - leftStart.x) * swap;
+    const leftY = leftStart.y - lift;
+    const rightX = rightStart.x + (rightEnd.x - rightStart.x) * swap;
+    const rightY = rightStart.y + lift;
+
+    setRect(leftCard, leftX, leftY);
+    setText(leftText, leftX, leftY);
+    setRect(rightCard, rightX, rightY);
+    setText(rightText, rightX, rightY);
+
+    if (p < 0.22) {
+      note.textContent = '先看成：3 个 6';
+    } else if (p < 0.72) {
+      note.textContent = '小方块不动，只是换成按列看';
+    } else {
+      note.textContent = '再看成：6 个 3';
+    }
+  }
+
+  function replayCommutative(event) {
+    if (event) event.stopPropagation();
+    if (animationId) cancelAnimationFrame(animationId);
+    drawAnimationScene();
+    const start = performance.now();
+
+    function frame(now) {
+      const progress = Math.min((now - start) / animationDuration, 1);
+      setAnimationProgress(progress);
+      if (progress < 1) animationId = requestAnimationFrame(frame);
+    }
+
+    animationId = requestAnimationFrame(frame);
+  }
+
+  function setSpeed(ms, button) {
+    animationDuration = ms;
+    document.querySelectorAll('[data-speed]').forEach(btn => btn.classList.toggle('active', btn === button));
+    replayCommutative();
+  }
+
+  document.querySelectorAll('[data-speed]').forEach(button => {
+    button.addEventListener('click', event => {
+      event.stopPropagation();
+      setSpeed(Number(button.dataset.speed), button);
+    });
+  });
+
+  drawStaticArray('rowArray', 'row');
+  drawStaticArray('colArray', 'col');
+  drawStaticArray('finalArray', 'both');
+  drawAnimationScene();
+
+  const observer = new MutationObserver(() => {
+    const slide = document.querySelector('.transform-slide');
+    if (slide?.classList.contains('active')) replayCommutative();
+  });
+  observer.observe(document.querySelector('.transform-slide'), { attributes: true, attributeFilter: ['class'] });
+</script>
+</body>
+</html>
