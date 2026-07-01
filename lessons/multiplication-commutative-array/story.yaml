@@ -1,0 +1,34 @@
+lesson:
+  id: multiplication-commutative-array
+  title: Multiplication Commutative Array
+  language: zh-CN
+  format: browser-deck
+  audience:
+    age_range: 7-10
+    mode: teacher-led, visual-transform
+  learning_goal: Understand that 3 times 6 and 6 times 3 count the same array in two directions.
+
+concept:
+  name: Commutative property of multiplication
+  concrete_model: 3 rows of 6 square blocks
+  transformation: row grouping -> same blocks -> column grouping
+
+key_sentence:
+  multiplication_meaning: "几乘几，就是几个几"
+  example: "3 × 6 = 3 个 6"
+
+example:
+  row_view: 3 rows, 6 blocks per row
+  column_view: 6 columns, 3 blocks per column
+  total: 18
+  conclusion: 3 * 6 = 6 * 3
+
+visual_design:
+  principle: blocks stay fixed, grouping changes
+  row_grouping: orange horizontal bands
+  column_grouping: blue vertical bands
+  factor_animation: swap the two factor cards while the grouping changes
+
+run:
+  entry: index.html
+  controls: right arrow, left arrow, space, click, fullscreen with F, replay button, speed buttons
